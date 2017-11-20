@@ -27,4 +27,4 @@ AC_CHECK_HEADERS([stdlib.h unistd.h])
 # Checks for library functions.
 AC_FUNC_MALLOC
 AC_CHECK_FUNCS([sqrt])
-AC_OUTPUT(Makefile src/Makefile)
+AC_OUTPUT(Makefile src/Makefile example/Makefile)

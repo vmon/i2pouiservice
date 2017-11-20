@@ -212,7 +212,7 @@ CPPFLAGS =
 CXX = g++
 CXXCPP = g++ -E
 CXXDEPMODE = depmode=gcc3
-CXXFLAGS = -O0 -g2
+CXXFLAGS = -g -O2
 CYGPATH_W = echo
 DEFS = -DPACKAGE_NAME=\"i2pouiservice\" -DPACKAGE_TARNAME=\"i2pouiservice\" -DPACKAGE_VERSION=\"1.0\" -DPACKAGE_STRING=\"i2pouiservice\ 1.0\" -DPACKAGE_BUGREPORT=\"vmon@riseup.net\" -DPACKAGE_URL=\"\" -DPACKAGE=\"i2pouiservice\" -DVERSION=\"1.0\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_STDLIB_H=1 -DHAVE_UNISTD_H=1 -DHAVE_STDLIB_H=1 -DHAVE_MALLOC=1 -DHAVE_SQRT=1
 DEPDIR = .deps
@@ -293,7 +293,7 @@ top_build_prefix =
 top_builddir = .
 top_srcdir = .
 AUTOMAKE_OPTIONS = foreign
-SUBDIRS = i2pd src example
+SUBDIRS = example i2pd src
 all: all-recursive
 
 .SUFFIXES:

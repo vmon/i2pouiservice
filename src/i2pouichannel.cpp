@@ -92,14 +92,7 @@ void Channel::handle_connect(const boost::system::error_code& err,
     {
       // The connection was successful. call the handler
       (_connect_handler)(err);
-      boost::asio::async_read(socket_, response_,
-                              boost::asio::transfer_at_least(1),
-                              boost::bind(&Channel::async_read_some, this,
-                                          boost::asio::placeholders::error));
      
-      boost::asio::async_write(socket_, request_,
-                               boost::bind(&Channel::async_write_some, this,
-                                           boost::asio::placeholders::error));
     }
   else if (endpoint_iterator != boost::asio::ip::tcp::resolver::iterator())
     {
@@ -126,19 +119,17 @@ void Channel::async_read_some( const MutableBufferSequence& bufs
 {
     using namespace std;
 
-    boost::asio::async_read(socket_, response_,
-                            boost::asio::transfer_at_least(1),
-                            boost::bind(&h, this,
+    socket_.async_read_some(bufs, boost::bind(&h, this,
                                         boost::asio::placeholders::error));
 
-    vector<boost::asio::mutable_buffer> bs(distance(bufs.begin(), bufs.end()));
+    // vector<boost::asio::mutable_buffer> bs(distance(bufs.begin(), bufs.end()));
 
-    get_io_service().post([ bufs.size()
-                            , self = shared_from_this()
-                            , h    = move(h) ] {
-                            // TODO: Check whether `close` was called?
-                            h(boost::system::error_code(), size);
-                          });
+    // get_io_service().post([ size = bufs.size()
+    //                         , self = shared_from_this()
+    //                         , h    = move(h) ] {
+    //                         // TODO: Check whether `close` was called?
+    //                         h(boost::system::error_code(), size);
+    //                       });
 }
 
 template< class ConstBufferSequence
@@ -148,12 +139,15 @@ void Channel::async_write_some( const ConstBufferSequence& bufs
 {
     using namespace std;
 
-    get_io_service().post([ size
-                            , self = shared_from_this()
-                            , h    = move(h) ] {
-                            // TODO: Check whether `close` was called?
-                            h(boost::system::error_code(), size);
-                          });
+    socket_.async_write_some(socket_,
+                               boost::bind(&h, this,
+                                           boost::asio::placeholders::error));
+    // get_io_service().post([ size
+    //                         , self = shared_from_this()
+    //                         , h    = move(h) ] {
+    //                         // TODO: Check whether `close` was called?
+    //                         h(boost::system::error_code(), size);
+    //                       });
 }
 
 Channel::~Channel()

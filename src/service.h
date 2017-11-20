@@ -26,9 +26,5 @@ public:
     
 };
 
-void Service::async_setup()
-{
-
-}
 }
 }

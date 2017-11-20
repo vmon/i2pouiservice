@@ -1,15 +1,15 @@
-#include <gnunet_channels/service.h>
-#include "scheduler.h"
-#include "cadet_connect.h"
-#include "hello_get.h"
+#include "service.h"
+#include "i2pouichannel.h"
 
+//i2p stuff
+#include "Log.h"
 #include "api.h"
 
 using namespace std;
-using namespace gnunet_channels;
+using namespace ouichannel;
+using namespace i2p_ouichannel;
 
-
-Service::Service(string config_path, asio::io_service& ios)
+Service::Service(string config_path, boost::asio::io_service& ios)
   : _ios(ios)
 {
   //start i2p logger
@@ -22,12 +22,17 @@ Service::Service(string config_path, asio::io_service& ios)
     
 }
 
-asio::io_service& Service::get_io_service()
+boost::asio::io_service& Service::get_io_service()
 {
   return _ios;
 }
 
 Service::~Service()
 {
-    _impl->was_destroyed = true;
+  //TODO?
+}
+
+void Service::async_setup()
+{
+  return;
 }
