@@ -2,9 +2,11 @@
 
 #include <memory>
 #include <boost/system/error_code.hpp>
+#include <boost/asio.hpp>
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/buffer.hpp>
 #include <boost/asio/buffers_iterator.hpp>
+#include <boost/bind.hpp>
 
 #include "I2PTunnel.h"
 
@@ -70,6 +72,48 @@ protected:
     
 };
 
+template< class MutableBufferSequence
+        , class ReadHandler>
+void Channel::async_read_some( const MutableBufferSequence& bufs
+                             , ReadHandler&& h)
+{
+    using namespace std;
+
+    socket_.async_read_some(bufs, h
+                          );
+
+    socket_.async_read_some(bufs, [ size = boost::asio::buffer_size(bufs)
+                                    , &h ] (const boost::system::error_code& ec, std::size_t size) {
+                            h(ec, size);
+                            });
+
+    socket_.async_read_some(bufs, [ size = boost::asio::buffer_size(bufs)
+                                    , h = move(h) ] (const boost::system::error_code& ec, std::size_t size) mutable {
+                            h(ec, size);
+                            });
+
+
+    socket_.async_read_some(bufs, [ size = boost::asio::buffer_size(bufs)
+                                    , h = move(h) ] (const boost::system::error_code& ec, std::size_t size)  {
+                            h(ec, size);
+                            });
+
+
+
+}
+
+
+template< class ConstBufferSequence
+        , class WriteHandler>
+void Channel::async_write_some( const ConstBufferSequence& bufs
+                              , WriteHandler&& h)
+{
+    using namespace std;
+
+    socket_.async_write_some(bufs, h);
+    // get_io_service().post(
+    //                       );
+}
 
 } // i2p_ouichannel
 } // ouichannel

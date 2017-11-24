@@ -5,8 +5,6 @@
 #include <tuple>
 #include <memory>
 #include <sstream>
-#include <boost/asio.hpp>
-#include <boost/bind.hpp>
 
 #include "Identity.h"
 #include "Destination.h"
@@ -46,6 +44,7 @@ void Channel::connect( std::string target_id
     i2p_oui_tunnel->AddReadyCallback(boost::bind(&Channel::handle_tunnel_ready, this, boost::asio::placeholders::error));
 
 }
+
 
 void Channel::handle_tunnel_ready(const boost::system::error_code& err)
 {
@@ -110,44 +109,6 @@ void Channel::handle_connect(const boost::system::error_code& err,
       (_connect_handler)(err);
       
     }
-}
-
-template< class MutableBufferSequence
-        , class ReadHandler>
-void Channel::async_read_some( const MutableBufferSequence& bufs
-                             , ReadHandler&& h)
-{
-    using namespace std;
-
-    socket_.async_read_some(bufs, boost::bind(&h, this,
-                                        boost::asio::placeholders::error));
-
-    // vector<boost::asio::mutable_buffer> bs(distance(bufs.begin(), bufs.end()));
-
-    // get_io_service().post([ size = bufs.size()
-    //                         , self = shared_from_this()
-    //                         , h    = move(h) ] {
-    //                         // TODO: Check whether `close` was called?
-    //                         h(boost::system::error_code(), size);
-    //                       });
-}
-
-template< class ConstBufferSequence
-        , class WriteHandler>
-void Channel::async_write_some( const ConstBufferSequence& bufs
-                              , WriteHandler&& h)
-{
-    using namespace std;
-
-    socket_.async_write_some(socket_,
-                               boost::bind(&h, this,
-                                           boost::asio::placeholders::error));
-    // get_io_service().post([ size
-    //                         , self = shared_from_this()
-    //                         , h    = move(h) ] {
-    //                         // TODO: Check whether `close` was called?
-    //                         h(boost::system::error_code(), size);
-    //                       });
 }
 
 Channel::~Channel()

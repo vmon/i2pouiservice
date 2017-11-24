@@ -5,6 +5,7 @@
 #include <boost/asio/posix/stream_descriptor.hpp>
 #include <boost/asio/read_until.hpp>
 #include <boost/asio/write.hpp>
+#include <boost/bind.hpp>
 
 #include "i2pouichannel.h"
 #include "service.h"
@@ -32,11 +33,40 @@ static string consume(asio::streambuf& buf, size_t n)
     return out;
 }
 
+
+void handle_read_echo(const boost::system::error_code& ec, asio::streambuf& buffer)
+{
+                if (ec || !channel) return;
+
+                cout << "Received: "
+                     << remove_new_line(consume(buffer, buffer.size()))
+                     << endl;
+}
+
+static void wait_for_the_echo(const boost::system::error_code& ec, asio::streambuf& buffer)
+{
+  if (ec || !channel)
+    return;
+
+  asio::async_read(*channel, buffer,
+                   [&buffer](const system::error_code& ec, std::size_t size) 
+                   {
+                      handle_read_echo(ec, buffer);
+                   }
+               );
+}
+
+static void handle_user_input(const boost::system::error_code& ec, asio::streambuf& buffer)
+{
+  if (ec || !channel) return;
+  asio::async_write(*channel, asio::buffer(consume(buffer, buffer.size())), [&buffer](const boost::system::error_code& ec, size_t size) {wait_for_the_echo(ec, buffer);});
+}
+
 static void run_chat(const boost::system::error_code& err) {
     auto& ios = channel->get_io_service();
 
     // Start printing received messages
-    asio::spawn(ios, [&channel] (asio::yield_context yield) {
+    asio::spawn(ios, [] (asio::yield_context yield) {
             system::error_code ec;
             asio::streambuf buffer(512);
 
@@ -60,23 +90,24 @@ static void run_chat(const boost::system::error_code& err) {
             system::error_code ec;
 
             //service.async_setup(yield[ec]);
-
             if (ec) {
                 cerr << "Failed to set up gnunet service: " << ec.message() << endl;
                 return;
             }
 
-
             while (true) {
               system::error_code ec;
-              size_t n = asio::async_read_until(input, buffer, '\n', yield[ec]);
-              if (ec || !channel) break;
-              asio::async_write(*channel, asio::buffer(consume(buffer, n)), yield[ec]);
-              if (ec || !channel) break;
+              asio::async_read_until(input, buffer, '\n', [&buffer] (const boost::system::error_code& ec, size_t size) mutable {
+                  handle_user_input(ec, buffer);
+                });
+
+              if (ec || !channel)
+                break;
             }
       }
       );
 }
+
 
 static void connect_and_run_chat( unique_ptr<Channel>& channel
                                 , Service& service
