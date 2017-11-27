@@ -79,26 +79,7 @@ void Channel::async_read_some( const MutableBufferSequence& bufs
 {
     using namespace std;
 
-    socket_.async_read_some(bufs, h
-                          );
-
-    socket_.async_read_some(bufs, [ size = boost::asio::buffer_size(bufs)
-                                    , &h ] (const boost::system::error_code& ec, std::size_t size) {
-                            h(ec, size);
-                            });
-
-    socket_.async_read_some(bufs, [ size = boost::asio::buffer_size(bufs)
-                                    , h = move(h) ] (const boost::system::error_code& ec, std::size_t size) mutable {
-                            h(ec, size);
-                            });
-
-
-    socket_.async_read_some(bufs, [ size = boost::asio::buffer_size(bufs)
-                                    , h = move(h) ] (const boost::system::error_code& ec, std::size_t size)  {
-                            h(ec, size);
-                            });
-
-
+    socket_.async_read_some(bufs, h);
 
 }
 

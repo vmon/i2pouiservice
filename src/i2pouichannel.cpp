@@ -107,7 +107,6 @@ void Channel::handle_connect(const boost::system::error_code& err,
       //connection failed call the handler with error
       std::cout << "Error: " << err.message() << "\n";
       (_connect_handler)(err);
-      
     }
 }
 

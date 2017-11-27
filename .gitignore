@@ -57,6 +57,9 @@ depcomp
 missing
 .deps
 */.deps
+*/Makefile
+*/Makefile.in
 
 #binaries
 example/i2pouichat
+src/get_slash

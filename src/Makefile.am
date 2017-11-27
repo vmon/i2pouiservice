@@ -1,7 +1,7 @@
 # whatever flags you want to pass to the C compiler & linker
 ACLOCAL_AMFLAGS = -I m4 -I config-aux --install
 
-AM_CXXFLAGS = --pedantic -Wall --std=c++14  -I$(srcdir)/../i2pd/libi2pd -I$(srcdir)/../i2pd/libi2pd_client 
+AM_CXXFLAGS = --pedantic -Wall --std=c++14 -I$(srcdir)/../i2pd/libi2pd -I$(srcdir)/../i2pd/libi2pd_client 
 AM_LDFLAGS = -Li2pd -lm -lboost_system -lboost_date_time -lboost_filesystem -lboost_program_options -lssl -lcrypto -lz $(PTHREAD)
 
 get_slash_LDADD = ./../i2pd/libi2pdclient.a ./../i2pd/libi2pd.a 

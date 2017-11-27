@@ -194,12 +194,13 @@ int main(int argc, char* const* argv)
             channel = make_unique<Channel>(service);
 
             if (!target_id.empty()) {
-                connect_and_run_chat(channel, service, target_id, port, yield);
+              connect_and_run_chat(channel, service, target_id, port, yield);
             }
             else {
-                accept_and_run_chat(channel, service, port, yield);
+              accept_and_run_chat(channel, service, port, yield);
             }
         });
 
+    boost::asio::io_service::work work(ios);
     ios.run();
 }
