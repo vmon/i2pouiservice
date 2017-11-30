@@ -20,6 +20,7 @@ using namespace ouichannel::i2p_ouichannel;
 
 Channel::Channel(Service& service)
   : _ios(service.get_io_service()),
+    _status_timer{_ios, std::chrono::seconds{3}},
     resolver_(_ios),
     socket_(_ios)
 {
@@ -38,18 +39,23 @@ void Channel::connect( std::string target_id
 
     i2p_oui_tunnel = std::make_unique<i2p::client::I2PClientTunnel>("i2p_oui_client", target_id, localhost, _tunnel_port, nullptr);
     _connect_handler = connect_handler;
-    
 
+    i2p_oui_tunnel->Start();
     //Wait till we find a route to the service and tunnel is ready then try to acutally connect and then call the handl
     i2p_oui_tunnel->AddReadyCallback(boost::bind(&Channel::handle_tunnel_ready, this, boost::asio::placeholders::error));
+    _status_timer.async_wait(boost::bind(&Channel::handle_tunnel_ready, this, boost::asio::placeholders::error));
 
 }
-
 
 void Channel::handle_tunnel_ready(const boost::system::error_code& err)
 {
     if (!err)
     {
+      std::cout << "Tunnel Ready?" << i2p_oui_tunnel->is_dest_ready() << std::endl;
+      std::cout.flush();
+
+      if (i2p_oui_tunnel->is_dest_ready()) {
+
       // The tunnel is ready
       // Start an asynchronous resolve to translate the server and service names
       // into a list of endpoints.
@@ -58,6 +64,10 @@ void Channel::handle_tunnel_ready(const boost::system::error_code& err)
                               boost::bind(&Channel::handle_resolve, this,
                                           boost::asio::placeholders::error,
                                           boost::asio::placeholders::iterator));
+      } else {
+        _status_timer.expires_at(_status_timer.expires_at() + std::chrono::seconds{3});
+        _status_timer.async_wait(boost::bind(&Channel::handle_tunnel_ready, this, boost::asio::placeholders::error));
+      }
     }
     else
     {

@@ -6,6 +6,8 @@
 #include <boost/asio/read_until.hpp>
 #include <boost/asio/write.hpp>
 #include <boost/bind.hpp>
+#include <boost/make_shared.hpp>
+#include <unistd.h>
 
 #include "i2pouichannel.h"
 #include "service.h"
@@ -62,27 +64,27 @@ static void handle_user_input(const boost::system::error_code& ec, asio::streamb
   asio::async_write(*channel, asio::buffer(consume(buffer, buffer.size())), [&buffer](const boost::system::error_code& ec, size_t size) {wait_for_the_echo(ec, buffer);});
 }
 
-static void run_chat(const boost::system::error_code& err) {
+void run_chat(const boost::system::error_code& err) {
     auto& ios = channel->get_io_service();
 
     // Start printing received messages
-    asio::spawn(ios, [] (asio::yield_context yield) {
-            system::error_code ec;
-            asio::streambuf buffer(512);
+    // asio::spawn(ios, [] (asio::yield_context yield) {
+    //         system::error_code ec;
+    //         asio::streambuf buffer(512);
 
-            while (true) {
-                size_t n = asio::async_read_until(*channel, buffer, '\n', yield[ec]);
+    //         while (true) {
+    //             size_t n = asio::async_read_until(*channel, buffer, '\n', yield[ec]);
 
-                if (ec || !channel) return;
+    //             if (ec || !channel) return;
 
-                cout << "Received: "
-                     << remove_new_line(consume(buffer, n))
-                     << endl;
-            }
-        });
+    //             cout << "Received: "
+    //                  << remove_new_line(consume(buffer, n))
+    //                  << endl;
+    //         }
+    //     });
 
     // Read from input and send it to peer
-    asio::posix::stream_descriptor input(ios, ::dup(STDIN_FILENO));
+    asio::posix::stream_descriptor input(ios, ::dup(STDIN_FILENO)); 
 
     asio::streambuf buffer(512);
 
@@ -95,11 +97,13 @@ static void run_chat(const boost::system::error_code& err) {
                 return;
             }
 
+            cout << "the code reaches here" << endl;
             while (true) {
               system::error_code ec;
-              asio::async_read_until(input, buffer, '\n', [&buffer] (const boost::system::error_code& ec, size_t size) mutable {
-                  handle_user_input(ec, buffer);
-                });
+              size_t size = asio::async_read_until(input, buffer, '\n', yield[ec]);
+              // cout << "the code never reaches here and the memory consumption sky rocket before my machine explodes" << endl;
+              cout << "you entered: " << consume(buffer, size) << endl;
+              //handle_user_input(ec, buffer);
 
               if (ec || !channel)
                 break;
@@ -107,7 +111,6 @@ static void run_chat(const boost::system::error_code& err) {
       }
       );
 }
-
 
 static void connect_and_run_chat( unique_ptr<Channel>& channel
                                 , Service& service
@@ -157,14 +160,43 @@ static void print_usage(const char* app_name)
 
 int main(int argc, char* const* argv)
 {
-    if (argc != 3 && argc != 4) {
+
+
+  if (argc != 3 && argc != 4) {
         print_usage(argv[0]);
         return 1;
     }
 
     asio::io_service ios;
 
-    Service service(argv[1], ios);
+    // Read from input and send it to peer
+    // asio::posix::stream_descriptor input(ios, ::dup(STDIN_FILENO));
+    // asio::streambuf buffer(512);
+
+
+  // asio::spawn(ios, [&] (auto yield) {
+  //     system::error_code ec;
+
+  //     //service.async_setup(yield[ec]);
+  //     if (ec) {
+  //       cerr << "Failed to set up gnunet service: " << ec.message() << endl;
+  //       return;
+  //     }
+
+  //     cout << "the code reaches here" << endl;
+  //     while (true) {
+  //       system::error_code ec;
+  //       size_t size = asio::async_read_until(input, buffer, '\n', yield[ec]);
+  //       // cout << "the code never reaches here and the memory consumption sky rocket before my machine explodes" << endl;
+  //       cout << "you entered: " << consume(buffer, size) << endl;
+  //       //handle_user_input(ec, buffer);
+
+  //       if (ec)
+  //         break;
+  //     }
+  //   });
+
+  Service service(argv[1], ios);
 
     string target_id;
     string port = argv[2];
