@@ -131,21 +131,12 @@ static void accept_and_run_chat( unique_ptr<Channel>& channel
                                , string port
                                , asio::yield_context yield)
 {
-    // system::error_code ec;
+    system::error_code ec;
 
-    // cout << "Accepting on port \"" << port << "\"" << endl;
+    cout << "Accepting on port \"" << port << "\"" << endl;
 
-    // {
-    //     CadetPort p(service);
-    //     p.open(*channel, port, yield[ec]);
-
-    //     if (ec) {
-    //         cerr << "Failed to accept: " << ec.message() << endl;
-    //         return;
-    //     }
-    // }
-
-    // cout << "Accepted" << endl;
+    service.listen(run_chat);
+    //cout << "Accepted" << endl;
 
     // run_chat(channel, yield);
 }

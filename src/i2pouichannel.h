@@ -37,6 +37,8 @@ public:
     connect( std::string target_id
              , const std::string& shared_secret, OnConnect connect_handler);
 
+    void listen(const std::string& shared_secret, int listen_port, OnConnect connect_handler);
+    
     template< class MutableBufferSequence
             , class ReadHandler>
     void async_read_some(const MutableBufferSequence&, ReadHandler&&);
@@ -48,6 +50,7 @@ public:
     ~Channel();
 
 protected:
+    friend class Service;
     int _tunnel_port;
     std::string localhost = "127.0.0.1";
     boost::asio::io_service& _ios;
@@ -58,7 +61,7 @@ protected:
     boost::asio::streambuf request_;
     boost::asio::streambuf response_;
 
-    std::unique_ptr<i2p::client::I2PClientTunnel> i2p_oui_tunnel;
+    std::unique_ptr<i2p::client::I2PService> i2p_oui_tunnel;
     
     OnConnect _connect_handler;
 

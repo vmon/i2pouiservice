@@ -1,5 +1,4 @@
 #include "service.h"
-#include "i2pouichannel.h"
 
 //i2p stuff
 #include "Log.h"
@@ -36,3 +35,40 @@ void Service::async_setup()
 {
   return;
 }
+
+/**
+   chooses a port and listen on it 
+*/
+void Service::listen(OnConnect connect_handler) {
+  _listen2i2p_port = rand() % 32768 + 32768;
+  _connect_handler = connect_handler;
+
+  //we have to listen to this prot so the i2pservertunnel can forward us the connection
+  acceptor_ = std::make_unique<boost::asio::ip::tcp::acceptor>(_ios, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), _listen2i2p_port));
+  Channel* new_connection = new Channel(*this);
+  acceptor_->async_accept(new_connection->socket_,
+                          boost::bind(&Service::handle_accept, this, new_connection,
+                                      boost::asio::placeholders::error));
+  
+}
+
+void Service::handle_accept(Channel* new_connection,
+         const boost::system::error_code& error)
+{
+    if (!error)
+    {
+      new_connection->connect("", "", _connect_handler);
+    }
+    else
+    {
+      delete new_connection;
+    }
+
+    Channel* re_connect = new Channel(*this);
+    acceptor_->async_accept(re_connect->socket_,
+          boost::bind(&Service::handle_accept, this, re_connect,
+          boost::asio::placeholders::error));
+
+}
+
+

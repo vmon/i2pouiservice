@@ -47,14 +47,29 @@ void Channel::connect( std::string target_id
 
 }
 
+void Channel::listen(const std::string& shared_secret, int listen_port, OnConnect connect_handler)
+{
+
+  i2p_oui_tunnel = std::make_unique<i2p::client::I2PServerTunnel>("i2p_oui_server", localhost, _tunnel_port, nullptr);
+  _connect_handler = connect_handler;
+
+    i2p_oui_tunnel->Start();
+    //Wait till we find a route to the service and tunnel is ready then try to acutally connect and then call the handl
+    cout << i2p_oui_tunnel->GetLocalDestination()->GetIdentity();
+    i2p_oui_tunnel->AddReadyCallback(boost::bind(&Channel::handle_tunnel_ready, this, boost::asio::placeholders::error));
+    _status_timer.async_wait(boost::bind(&Channel::handle_tunnel_ready, this, boost::asio::placeholders::error));
+  
+}
+
+
 void Channel::handle_tunnel_ready(const boost::system::error_code& err)
 {
     if (!err)
     {
-      std::cout << "Tunnel Ready?" << i2p_oui_tunnel->is_dest_ready() << std::endl;
+      std::cout << "Tunnel Ready? " << (i2p_oui_tunnel->GetLocalDestination()->IsReady() ? "True" : "False") << std::endl;
       std::cout.flush();
 
-      if (i2p_oui_tunnel->is_dest_ready()) {
+      if (i2p_oui_tunnel->GetLocalDestination()->IsReady()) {
 
       // The tunnel is ready
       // Start an asynchronous resolve to translate the server and service names
