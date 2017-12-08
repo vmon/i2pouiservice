@@ -50,6 +50,7 @@ void Channel::connect( std::string target_id
 void Channel::listen(const std::string& shared_secret, int listen_port, OnConnect connect_handler)
 {
 
+  _tunnel_port = listen_port;
   i2p_oui_tunnel = std::make_unique<i2p::client::I2PServerTunnel>("i2p_oui_server", localhost, _tunnel_port, nullptr);
   _connect_handler = connect_handler;
 
@@ -101,7 +102,7 @@ void Channel::handle_resolve(const boost::system::error_code& err,
       boost::asio::ip::tcp::endpoint endpoint = *endpoint_iterator;
       socket_.async_connect(endpoint,
                             boost::bind(&Channel::handle_connect, this,
-                                        boost::asio::placeholders::error, ++endpoint_iterator));
+                                        boost::asio::placeholders::error));
     }
   else
     {
@@ -109,8 +110,7 @@ void Channel::handle_resolve(const boost::system::error_code& err,
     }
 }
 
-void Channel::handle_connect(const boost::system::error_code& err,
-                    boost::asio::ip::tcp::resolver::iterator endpoint_iterator)
+void Channel::handle_connect(const boost::system::error_code& err)
 {
   if (!err)
     {
@@ -118,15 +118,15 @@ void Channel::handle_connect(const boost::system::error_code& err,
       (_connect_handler)(err);
      
     }
-  else if (endpoint_iterator != boost::asio::ip::tcp::resolver::iterator())
-    {
-      // The connection failed. Try the next endpoint in the list.
-      socket_.close();
-      boost::asio::ip::tcp::endpoint endpoint = *endpoint_iterator;
-      socket_.async_connect(endpoint,
-                            boost::bind(&Channel::handle_connect, this,
-                                        boost::asio::placeholders::error, ++endpoint_iterator));
-    }
+  // else if (endpoint_iterator != boost::asio::ip::tcp::resolver::iterator())
+  //   {
+  //     // The connection failed. Try the next endpoint in the list.
+  //     socket_.close();
+  //     boost::asio::ip::tcp::endpoint endpoint = *endpoint_iterator;
+  //     socket_.async_connect(endpoint,
+  //                           boost::bind(&Channel::handle_connect, this,
+  //                                       boost::asio::placeholders::error, ++endpoint_iterator));
+  //   }
     else
     {
       //connection failed call the handler with error

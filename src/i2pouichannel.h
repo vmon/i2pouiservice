@@ -67,9 +67,7 @@ protected:
 
     void handle_tunnel_ready(const boost::system::error_code& err);
     void handle_resolve(const boost::system::error_code& err, boost::asio::ip::tcp::resolver::iterator endpoint_iterator);
-    void handle_connect(const boost::system::error_code& err,
-                        boost::asio::ip::tcp::resolver::iterator endpoint_iterator);
-
+    void handle_connect(const boost::system::error_code& err);
 
     
 };

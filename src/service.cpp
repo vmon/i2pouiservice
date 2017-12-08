@@ -49,6 +49,7 @@ void Service::listen(OnConnect connect_handler) {
   acceptor_->async_accept(new_connection->socket_,
                           boost::bind(&Service::handle_accept, this, new_connection,
                                       boost::asio::placeholders::error));
+  new_connection->listen("", _listen2i2p_port, connect_handler);
   
 }
 
@@ -57,7 +58,7 @@ void Service::handle_accept(Channel* new_connection,
 {
     if (!error)
     {
-      new_connection->connect("", "", _connect_handler);
+      new_connection->handle_connect(error);
     }
     else
     {
