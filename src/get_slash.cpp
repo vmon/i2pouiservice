@@ -140,10 +140,10 @@ private:
   {
     if (!err)
     {
-      std::cout << "Tunnel Ready?" << i2p_oui_tunnel.is_dest_ready() << std::endl;
+      std::cout << "Tunnel Ready?" << i2p_oui_tunnel.GetLocalDestination()->IsReady() << std::endl;
       std::cout.flush();
 
-      if (i2p_oui_tunnel.is_dest_ready()) {
+      if (i2p_oui_tunnel.GetLocalDestination()->IsReady()) {
       // The tunnel is ready
       // Start an asynchronous resolve to translate the server and service names
       // into a list of endpoints.
