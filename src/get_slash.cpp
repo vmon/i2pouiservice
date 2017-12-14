@@ -40,7 +40,7 @@ public:
       socket_(io_service),
       i2p_oui_tunnel("i2p_oui_client", "xGNxi33ttUqf2oM8KopC5i~jE4feDcWZJ~dG2yczuSq~ErH1VqGnL6T3W3zjwe5K59-fjeaVJ1oniccanNk3UqHDVut4sFKwpNISFO9RUnUbKGKbj0C1az7ra6Rf3v5vJb2ByvLS7IsPPMffI6CvxysXNvuYe7MqzK1QLaXQ9eDifL8~kHpbr-WT2ewV-F9h5dnzc0AGcgsiw~TCDZW14vLtU5ysQhaaxnfld6tsYW4u8ejSKwdGPnVkN-fcw08riisQ9Z2ETnmSvkCHu51lG8h1jahbkt4PjpZaANaHhdgJW3Gq770nsHTHi0X3huboNKDL8opegrZkFJxcxuSf3V1MyaH8~qr2xFJ7tJBEvwSwN10cIYN2gWx3GXfeqKfo6bRdNv8Pl7bvM8~knoZw6UA5wLe5tnbeObE11oCoczD1DHidRSc0O1T93-vGlXGKd7~ncy1I-7P7WJ8MIbkXaRoLWUmMw~VJntlyb1bRKrAocuTwm6PnlU8CmWLeLcSkAAAA", "127.0.0.1", 8123, nullptr),
       m_address_book(i2p::client::context.GetAddressBook ()),
-      m_HttpProxy("127.0.0.1", 8124, nullptr)
+      m_HttpProxy("myhttpproxy","127.0.0.1", 8124, nullptr)
 
   {
     // i2p::config::Init();
