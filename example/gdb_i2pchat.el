@@ -4,3 +4,5 @@
 
 ;;server
 (gdb "gdb -i=mi --args ./i2pouichat - - ")
+
+(gdb "gdb -i=mi --args ./i2pouichat - - l8e~NR26yXd3C6Hi8XDRrn3Q6~FztVMb1Sg1JzV6yortHBs7aSYt8UgokX1XbhzIM1LCq~k-KzXScmwh-VOjBu-hEdacFO4MgyJEiUJdMd2qwwxrwmiUDVns~CGmywJ9K2dVRK1o5GwgTY1vuS11~AMobXbd~-xCE1a~V2xSW9HHrGgaRVA0KlVF9U-LHCzSK-37vxDTeCSoP5CW-q5VOqGDoTcCbbo0JgABaSZjpzbTa9bfwZDjTy26Wx1rHoEpP5C1T6iRO4lkAuy6VUau~S1Tovb5w4T-SLtbx~~B5brDQJG6m9jFMp~OKffnZ51fsqVke-~snct33PJptg8UDnBkpij3mlJELEi54KhpN-EGHH56Y7hfAq-sTkIqUFwiFCCcHpgyBtekwmwgBXoDqUsvtV22~Wq7qK6jRcO2A0LrcKZ20y-2yQPyPvqXR1cKnFOt7j6LALiHWvM70urysWcIEohwuVirq9eY2xikRHwJEI0LsKLyDLFCJHtlImUiAAAA")
