@@ -24,6 +24,7 @@ public:
 
 public:
     Channel(Service&);
+    Channel(Service& service, boost::asio::ip::tcp::socket& server_socket);
 
     Channel(const Channel&) = delete;
     Channel& operator=(const Channel&) = delete;
@@ -37,7 +38,7 @@ public:
     connect( std::string target_id
              , const std::string& shared_secret, OnConnect connect_handler);
 
-    void listen(const std::string& shared_secret, int listen_port, OnConnect connect_handler);
+    void listen(const std::string& shared_secret, int listen_port, OnConnect connect_handler, std::string private_key_str = "");
     
     template< class MutableBufferSequence
             , class ReadHandler>
@@ -56,7 +57,8 @@ protected:
     boost::asio::io_service& _ios;
     boost::asio::steady_timer _status_timer;
     boost::asio::ip::tcp::resolver resolver_;
-    boost::asio::ip::tcp::socket socket_;
+    boost::asio::ip::tcp::socket client_socket_;
+    boost::asio::ip::tcp::socket& socket_;
     
     boost::asio::streambuf request_;
     boost::asio::streambuf response_;
@@ -77,10 +79,7 @@ template< class MutableBufferSequence
 void Channel::async_read_some( const MutableBufferSequence& bufs
                              , ReadHandler&& h)
 {
-    using namespace std;
-
     socket_.async_read_some(bufs, h);
-
 }
 
 

@@ -2,6 +2,8 @@
 
 (gdb "gdb -i=mi --args ./i2pouichat - - xGNxi33ttUqf2oM8KopC5i~jE4feDcWZJ~dG2yczuSq~ErH1VqGnL6T3W3zjwe5K59-fjeaVJ1oniccanNk3UqHDVut4sFKwpNISFO9RUnUbKGKbj0C1az7ra6Rf3v5vJb2ByvLS7IsPPMffI6CvxysXNvuYe7MqzK1QLaXQ9eDifL8~kHpbr-WT2ewV-F9h5dnzc0AGcgsiw~TCDZW14vLtU5ysQhaaxnfld6tsYW4u8ejSKwdGPnVkN-fcw08riisQ9Z2ETnmSvkCHu51lG8h1jahbkt4PjpZaANaHhdgJW3Gq770nsHTHi0X3huboNKDL8opegrZkFJxcxuSf3V1MyaH8~qr2xFJ7tJBEvwSwN10cIYN2gWx3GXfeqKfo6bRdNv8Pl7bvM8~knoZw6UA5wLe5tnbeObE11oCoczD1DHidRSc0O1T93-vGlXGKd7~ncy1I-7P7WJ8MIbkXaRoLWUmMw~VJntlyb1bRKrAocuTwm6PnlU8CmWLeLcSkAAAA")
 
+(gdb "gdb -i=mi --args ./i2pouichat - - FUfWP~psNnrQhFbVEZaCleCygQ4mRo5AEmZ9paiL-sch7UU02qfH3oTNlIW8WpDfzFRH1uu9mrU6fWh19-qtM0O-fjrj-OjX9zVtz3zKYK2PfWHVcA2obw1-ESOvZCtmnK3GMnpyE8bXnyAC-BMDKTMbYqnQsHBtsJVjorLOHZ1eI6XbIheL7Uda4kt-YPsYbnVCJySJXw7UyNkFpo5JX0cEa0R4ZZDv~Qsgb29STeSt3d1rxTAEqzMXF~sbYpEwLqQxOAC9qY0iJnSr4-eZW9BfYlJ2mNnl-TvH6GUhhqkJl7FQFtNnz1GC7vRmdT7v2OxmyTE7qOAfnp4SScwCykZvYCAtGraSyRYsDFKjhfzF3CW09cW7M02TzRLAuy4agENa9gtAogAysQoBYb8Wym-rLMwDUAhYS2FotIY7I85NGiP5v9kEufo0zzY1R~mm~oAFn63Rmr~V5oGwsNFvnc-9Fac6a2HBxCM1-SE5UxaOO1B3Ipn65AiCB31cvR0hBQAEAAEAAA==")
+
 ;;server
 (gdb "gdb -i=mi --args ./i2pouichat - - ")
 

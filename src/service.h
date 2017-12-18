@@ -8,7 +8,6 @@
 namespace ouichannel {
 namespace i2p_ouichannel {
 
-
 class Service {
 
 public:
@@ -28,7 +27,7 @@ public:
   /**
      chooses a port and listen on it 
    */
-  void listen(OnConnect connect_handler);
+  void listen(OnConnect connect_handler, std::string private_key_str = "");
 
   ~Service();
 
@@ -41,7 +40,8 @@ protected:
   int _listen2i2p_port;
 
   OnConnect _connect_handler;
-
+  std::string _private_key_str;
+  boost::asio::ip::tcp::socket socket_;
     
 };
 
