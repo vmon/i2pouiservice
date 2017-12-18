@@ -23,17 +23,7 @@ Channel::Channel(Service& service)
   : _ios(service.get_io_service()),
     _status_timer{_ios, std::chrono::seconds{3}},
     resolver_(_ios),
-    client_socket_(_ios),
-    socket_(client_socket_)
-{
-}
-
-Channel::Channel(Service& service, boost::asio::ip::tcp::socket& server_socket)
-  : _ios(service.get_io_service()),
-    _status_timer{_ios, std::chrono::seconds{3}},
-    resolver_(_ios),
-    client_socket_(_ios),
-    socket_(server_socket)
+    socket_(_ios)
 {
 }
 
@@ -62,10 +52,12 @@ void Channel::connect( std::string target_id
 
 void Channel::listen(const std::string& shared_secret, int listen_port, OnConnect connect_handler, std::string private_key_str)
 {
+  _server_mode = true;
   _tunnel_port = listen_port;
   //we need to make a local destination first.
   //std::shared_ptr<i2p::client::ClientDestination>
   std::shared_ptr<i2p::client::ClientDestination> local_destination;
+  
 
   if (private_key_str.length() > 0) {
     i2p::data::PrivateKeys service_keys;
@@ -98,7 +90,7 @@ void Channel::handle_tunnel_ready(const boost::system::error_code& err)
       std::cout << "Tunnel Ready? " << (i2p_oui_tunnel->GetLocalDestination()->IsReady() ? "True" : "False") << std::endl;
       std::cout.flush();
 
-      if (i2p_oui_tunnel->GetLocalDestination()->IsReady()) {
+      if (i2p_oui_tunnel->GetLocalDestination()->IsReady() && (!_server_mode)) {
 
       // The tunnel is ready
       // Start an asynchronous resolve to translate the server and service names
@@ -143,7 +135,7 @@ void Channel::handle_connect(const boost::system::error_code& err)
   if (!err)
     {
       // The connection was successful. call the handler
-      (_connect_handler)(err);
+      (_connect_handler)(err, this);
      
     }
   // else if (endpoint_iterator != boost::asio::ip::tcp::resolver::iterator())
@@ -159,7 +151,7 @@ void Channel::handle_connect(const boost::system::error_code& err)
     {
       //connection failed call the handler with error
       std::cout << "Error: " << err.message() << "\n";
-      (_connect_handler)(err);
+      (_connect_handler)(err, this);
     }
 }
 

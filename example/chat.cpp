@@ -65,12 +65,12 @@ static void handle_user_input(const boost::system::error_code& ec, asio::streamb
     });
 }
 
-static void run_chat(const boost::system::error_code& err) {
+static void run_chat(const boost::system::error_code& err, Channel* channel) {
     auto& ios = channel->get_io_service();
 
     //this co-routine reads always from the socket and write it to std out.
     //Start printing received messages
-    asio::spawn(ios, [] (asio::yield_context yield) {
+    asio::spawn(ios, [channel] (asio::yield_context yield) {
             system::error_code ec;
             asio::streambuf buffer(512);
 

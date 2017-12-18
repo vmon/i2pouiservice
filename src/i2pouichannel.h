@@ -18,13 +18,12 @@ class Service;
 
 class Channel {
 public:
-  using OnConnect = std::function<void(boost::system::error_code)>;
+  using OnConnect = std::function<void(boost::system::error_code, Channel*)>;
   using OnReceive = std::function<void(boost::system::error_code, size_t)>;
   using OnWrite   = std::function<void(boost::system::error_code, size_t)>;
 
 public:
     Channel(Service&);
-    Channel(Service& service, boost::asio::ip::tcp::socket& server_socket);
 
     Channel(const Channel&) = delete;
     Channel& operator=(const Channel&) = delete;
@@ -53,12 +52,13 @@ public:
 protected:
     friend class Service;
     int _tunnel_port;
+    bool _server_mode = false;
     std::string localhost = "127.0.0.1";
     boost::asio::io_service& _ios;
     boost::asio::steady_timer _status_timer;
     boost::asio::ip::tcp::resolver resolver_;
-    boost::asio::ip::tcp::socket client_socket_;
-    boost::asio::ip::tcp::socket& socket_;
+    boost::asio::ip::tcp::socket socket_;
+    
     
     boost::asio::streambuf request_;
     boost::asio::streambuf response_;

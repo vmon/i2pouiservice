@@ -11,7 +11,7 @@ namespace i2p_ouichannel {
 class Service {
 
 public:
-  using OnConnect = std::function<void(boost::system::error_code)>;
+  using OnConnect = std::function<void(boost::system::error_code, Channel*)>;
 
   Service(std::string config_path, boost::asio::io_service&);
 
@@ -41,7 +41,6 @@ protected:
 
   OnConnect _connect_handler;
   std::string _private_key_str;
-  boost::asio::ip::tcp::socket socket_;
     
 };
 

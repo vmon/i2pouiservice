@@ -10,7 +10,6 @@ using namespace i2p_ouichannel;
 
 Service::Service(string config_path, boost::asio::io_service& ios)
   : _ios(ios)
-  , socket_(_ios)
 
 {
   //start i2p logger
@@ -48,9 +47,9 @@ void Service::listen(OnConnect connect_handler, std::string private_key_str) {
 
   //we have to listen to this prot so the i2pservertunnel can forward us the connection
   acceptor_ = std::make_unique<boost::asio::ip::tcp::acceptor>(_ios, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), _listen2i2p_port));
-  Channel* new_connection = new Channel(*this, socket_);
+  Channel* new_connection = new Channel(*this);
   acceptor_->listen();
-  acceptor_->async_accept(socket_,
+  acceptor_->async_accept(new_connection->socket_,
                           boost::bind(&Service::handle_accept, this, new_connection,
                                       boost::asio::placeholders::error));
   new_connection->listen("", _listen2i2p_port, _connect_handler,  _private_key_str);
