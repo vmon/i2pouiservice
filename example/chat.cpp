@@ -60,9 +60,6 @@ void handle_read_echo(const boost::system::error_code& ec, asio::streambuf& buff
 
 static void handle_user_input(const boost::system::error_code& ec, asio::streambuf& buffer)
 {
-  if (ec || !channel) return;
-  asio::async_write(*channel, asio::buffer(consume(buffer, buffer.size())), [](const boost::system::error_code& ec, size_t size) {// wait_for_the_echo(ec, buffer) nothing more to do
-    });
 }
 
 static void run_chat(const boost::system::error_code& err, Channel* channel) {
@@ -107,7 +104,8 @@ static void run_chat(const boost::system::error_code& err, Channel* channel) {
                 break;
 
               cout << "sending your message..." << endl;
-              if (size > 0) handle_user_input(ec, buffer);
+              if (size > 0) 
+                asio::async_write(*channel, asio::buffer(consume(buffer, buffer.size())), yield[ec]);
             }
       }
       );
@@ -137,7 +135,6 @@ static void accept_and_run_chat( unique_ptr<Channel>& channel
 
     service.listen(run_chat, "vGSGr4PutpxqnP4QMYpfu1LrD9R0l5GBQS0Y2dErGKoIEtVx25O0gvTlnKfr0DA~Y75rCQe0A2zKELhghsdA6~5aBAiQRJqdOEm-e5tmGIAicjDCzgNRJ-k1aA0d6m7p9zEk7mI5xWZkM1Ipkj-WiPc-QYh1sX6JS6e3~8BtZyMH1GAJMEe3-ZNY2-nE-H62rXlp8gm70fJkXEcfk3l12rLQsJyiTg2chCohuO9pJx8BIzWkFHy2j8icsmAMXDIMXuj6~U28AAWFuXFQs9Go~EVFOtKa7n~WboCc4wmxm7gT-GjTJxTQdY-sDkWJMyrxUMSPhsXwa3gNc0oD-envaUSSHPF4Fl3FO~TPuNbTiqurWk14dZ3-JGTNTHlzBdqfZGjY8VpbsDraaCKSGwVrHUdhtHolMJFdlWeuZyqYH6BSgbQPrI7tMkvr5oG~J6WMk39KvM-Xq6aJiq6fFqr7ls8-B2rf2xFIv8WnF2iBVi~8GNLAlj7t9pkqU1MkwP8EBQAEAAEAALqMSlCLnLUy7q8~e~iCc8fU7XVVIXAh8iD2XEWeqKsLbuchjRb44Kim0ociu6kEixRTgpDtfHvsUzS-nSWhTG00hT1xA8WbMKW-fhks-8X7vOxJO7xKY89KVrJmk6xMjX9cesLkhiJkP4m8KV4LYz036VISmwoivfNzPEB-ObDKMqd01BljEqyS4f82jFf2MqQLtno9JXLD7uKb17Pvd4ys24WmI8nvhtck5JeCx4ew-unvLSUNfgP5UaVB4Jk1NQDc4af9UVLuXfyLaYYgHTamQHn-Ap-VwfwkGr3Vn2YofI6TOEui0hyv0AR1JolMQ5CfklKl5cMDJhorBGizdfS-RjYAWRV9b4bWvSHZWpBxJj70a1En1Wm2zzezBMUbCQ==");
     //cout << "Accepted" << endl;
-
     // run_chat(channel, yield);
 }
 
