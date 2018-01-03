@@ -83,7 +83,7 @@ static void run_chat(const boost::system::error_code& err, Channel* channel) {
         });
 
     // this co-routine reads from std input and send it to peer
-    asio::spawn(ios, [&] (auto yield) {
+    asio::spawn(ios, [channel, &ios] (auto yield) {
             system::error_code ec;
             asio::posix::stream_descriptor input(ios, ::dup(STDIN_FILENO)); 
 
