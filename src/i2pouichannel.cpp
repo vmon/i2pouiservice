@@ -44,9 +44,10 @@ void Channel::connect( std::string target_id
     _connect_handler = connect_handler;
 
     i2p_oui_tunnel->Start();
-    //Wait till we find a route to the service and tunnel is ready then try to acutally connect and then call the handl
+
+    //Wait till we find a route to the service and tunnel is ready then try to acutally connect and then call the handle
     i2p_oui_tunnel->AddReadyCallback(boost::bind(&Channel::handle_tunnel_ready, this, boost::asio::placeholders::error));
-    _status_timer.async_wait(boost::bind(&Channel::handle_tunnel_ready, this, boost::asio::placeholders::error));
+    //_status_timer.async_wait(boost::bind(&Channel::handle_tunnel_ready, this, boost::asio::placeholders::error));
 
 }
 
@@ -57,7 +58,6 @@ void Channel::listen(const std::string& shared_secret, int listen_port, OnConnec
   //we need to make a local destination first.
   //std::shared_ptr<i2p::client::ClientDestination>
   std::shared_ptr<i2p::client::ClientDestination> local_destination;
-  
 
   if (private_key_str.length() > 0) {
     i2p::data::PrivateKeys service_keys;
@@ -73,12 +73,12 @@ void Channel::listen(const std::string& shared_secret, int listen_port, OnConnec
 
   i2p_oui_tunnel->Start();
   //Wait till we find a route to the service and tunnel is ready then try to acutally connect and then call the handl
-    i2p_oui_tunnel->GetLocalDestination()->GetIdentity();
-    cout << "port: " << _tunnel_port << endl;
-    cout << "i2p public id:"  << i2p_oui_tunnel->GetLocalDestination()->GetIdentity()->ToBase64() << endl;
-    cout << "i2p private keys:"  << i2p_oui_tunnel->GetLocalDestination()->GetPrivateKeys().ToBase64() << endl;
-    i2p_oui_tunnel->AddReadyCallback(boost::bind(&Channel::handle_tunnel_ready, this, boost::asio::placeholders::error));
-    _status_timer.async_wait(boost::bind(&Channel::handle_tunnel_ready, this, boost::asio::placeholders::error));
+  i2p_oui_tunnel->GetLocalDestination()->GetIdentity();
+  cout << "port: " << _tunnel_port << endl;
+  cout << "i2p public id:"  << i2p_oui_tunnel->GetLocalDestination()->GetIdentity()->ToBase64() << endl;
+  cout << "i2p private keys:"  << i2p_oui_tunnel->GetLocalDestination()->GetPrivateKeys().ToBase64() << endl;
+  i2p_oui_tunnel->AddReadyCallback(boost::bind(&Channel::handle_tunnel_ready, this, boost::asio::placeholders::error));
+  //_status_timer.async_wait(boost::bind(&Channel::handle_tunnel_ready, this, boost::asio::placeholders::error));
 
 }
 
@@ -92,18 +92,18 @@ void Channel::handle_tunnel_ready(const boost::system::error_code& err)
 
       if (i2p_oui_tunnel->GetLocalDestination()->IsReady() && (!_server_mode)) {
 
-      // The tunnel is ready
-      // Start an asynchronous resolve to translate the server and service names
-      // into a list of endpoints.
-      boost::asio::ip::tcp::resolver::query query(localhost, std::to_string(_tunnel_port));
-      resolver_.async_resolve(query,
-                              boost::bind(&Channel::handle_resolve, this,
-                                          boost::asio::placeholders::error,
-                                          boost::asio::placeholders::iterator));
-      } else {
+        // The tunnel is ready
+        // Start an asynchronous resolve to translate the server and service names
+        // into a list of endpoints.
+        boost::asio::ip::tcp::resolver::query query(localhost, std::to_string(_tunnel_port));
+        resolver_.async_resolve(query,
+                                boost::bind(&Channel::handle_resolve, this,
+                                            boost::asio::placeholders::error,
+                                            boost::asio::placeholders::iterator));
+      } /*else {
         _status_timer.expires_at(_status_timer.expires_at() + std::chrono::seconds{3});
         _status_timer.async_wait(boost::bind(&Channel::handle_tunnel_ready, this, boost::asio::placeholders::error));
-      }
+        }*/
     }
     else
     {

@@ -59,7 +59,6 @@ protected:
     boost::asio::ip::tcp::resolver resolver_;
     boost::asio::ip::tcp::socket socket_;
     
-    
     boost::asio::streambuf request_;
     boost::asio::streambuf response_;
 
@@ -71,7 +70,6 @@ protected:
     void handle_resolve(const boost::system::error_code& err, boost::asio::ip::tcp::resolver::iterator endpoint_iterator);
     void handle_connect(const boost::system::error_code& err);
 
-    
 };
 
 template< class MutableBufferSequence

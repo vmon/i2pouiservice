@@ -1,2 +1,2 @@
 AUTOMAKE_OPTIONS = foreign
-SUBDIRS =  example i2pd src
+SUBDIRS =  i2pd src example
