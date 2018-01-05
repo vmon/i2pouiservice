@@ -12,6 +12,12 @@ Service::Service(string config_path, boost::asio::io_service& ios)
   : _ios(ios)
 
 {
+  //here we are going to read the config file and
+  //set options based on those values for now we just
+  //set it up by some default values;
+
+  _i2p_tunnel_ready_timeout = 300; //we wait 5min
+  
   //start i2p logger
   i2p::log::Logger().Start();
 
@@ -52,7 +58,7 @@ void Service::listen(OnConnect connect_handler, std::string private_key_str) {
   acceptor_->async_accept(new_connection->socket_,
                           boost::bind(&Service::handle_accept, this, new_connection,
                                       boost::asio::placeholders::error));
-  new_connection->listen("", _listen2i2p_port, _connect_handler,  _private_key_str);
+  new_connection->listen("", _listen2i2p_port, _connect_handler, _i2p_tunnel_ready_timeout,  _private_key_str);
   
 }
 
@@ -74,7 +80,7 @@ void Service::handle_accept(Channel* new_connection,
           boost::bind(&Service::handle_accept, this, re_connect,
           boost::asio::placeholders::error));
 
-    re_connect->listen("", _listen2i2p_port, _connect_handler, _private_key_str);
+    re_connect->listen("", _listen2i2p_port, _connect_handler, _i2p_tunnel_ready_timeout, _private_key_str);
 
 }
 

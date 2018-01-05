@@ -34,10 +34,9 @@ public:
     boost::asio::io_service& get_io_service();
 
     void
-    connect( std::string target_id
-             , const std::string& shared_secret, OnConnect connect_handler);
+      connect( std::string target_id, const std::string& shared_secret, uint32_t connect_timeout,           OnConnect connect_handler);
 
-    void listen(const std::string& shared_secret, int listen_port, OnConnect connect_handler, std::string private_key_str = "");
+    void listen(const std::string& shared_secret, int listen_port, OnConnect connect_handler, uint32_t connect_timeout = 0, std::string private_key_str = "");
     
     template< class MutableBufferSequence
             , class ReadHandler>
@@ -55,7 +54,7 @@ protected:
     bool _server_mode = false;
     std::string localhost = "127.0.0.1";
     boost::asio::io_service& _ios;
-    boost::asio::steady_timer _status_timer;
+    //boost::asio::steady_timer _status_timer;
     boost::asio::ip::tcp::resolver resolver_;
     boost::asio::ip::tcp::socket socket_;
     

@@ -82,6 +82,11 @@ static void run_chat(const boost::system::error_code& err, Channel* channel) {
             }
         });
 
+    //service.async_setup(yield[ec]);
+    if (err) {
+      cerr << "Failed to set up gnunet service: " << err.message() << endl;
+      return;
+    }
     // this co-routine reads from std input and send it to peer
     asio::spawn(ios, [channel, &ios] (auto yield) {
             system::error_code ec;
@@ -89,11 +94,6 @@ static void run_chat(const boost::system::error_code& err, Channel* channel) {
 
             asio::streambuf buffer(512);
 
-            //service.async_setup(yield[ec]);
-            if (ec) {
-                cerr << "Failed to set up gnunet service: " << ec.message() << endl;
-                return;
-            }
 
             cout << "Enter a message to the peer" << endl;
             while (true) {
@@ -120,7 +120,7 @@ static void connect_and_run_chat( unique_ptr<Channel>& channel
     system::error_code ec;
 
     cout << "Connecting to " << target_id << endl;
-    channel->connect(target_id, port, run_chat);
+    channel->connect(target_id, port, service.get_i2p_tunnel_ready_timeout(), run_chat);
     
 }
 
@@ -165,14 +165,6 @@ int main(int argc, char* const* argv)
     if (argc >= 4) {
         target_id = argv[3];
     }
-
-    // Capture these signals so that we can disconnect gracefully.
-    asio::signal_set signals(ios, SIGINT, SIGTERM);
-
-
-    //signals.async_wait([&](system::error_code, int /* signal_number */) {
-    //        channel.reset();
-    //    });
 
     asio::spawn(ios, [&] (auto yield) {
             system::error_code ec;

@@ -21,7 +21,6 @@ using namespace ouichannel::i2p_ouichannel;
 
 Channel::Channel(Service& service)
   : _ios(service.get_io_service()),
-    _status_timer{_ios, std::chrono::seconds{3}},
     resolver_(_ios),
     socket_(_ios)
 {
@@ -34,6 +33,7 @@ boost::asio::io_service& Channel::get_io_service()
 
 void Channel::connect( std::string target_id
                           , const std::string& shared_secret
+                          , uint32_t connect_timeout
                           , OnConnect connect_handler)
 {
     _tunnel_port = rand() % 32768 + 32768;
@@ -47,11 +47,13 @@ void Channel::connect( std::string target_id
 
     //Wait till we find a route to the service and tunnel is ready then try to acutally connect and then call the handle
     i2p_oui_tunnel->AddReadyCallback(boost::bind(&Channel::handle_tunnel_ready, this, boost::asio::placeholders::error));
+    //we need to set a timeout in order to trigger the timer for checking the tunnel readyness
+    i2p_oui_tunnel->SetConnectTimeout(connect_timeout);
     //_status_timer.async_wait(boost::bind(&Channel::handle_tunnel_ready, this, boost::asio::placeholders::error));
 
 }
 
-void Channel::listen(const std::string& shared_secret, int listen_port, OnConnect connect_handler, std::string private_key_str)
+void Channel::listen(const std::string& shared_secret, int listen_port, OnConnect connect_handler, uint32_t connect_timeout, std::string private_key_str)
 {
   _server_mode = true;
   _tunnel_port = listen_port;
@@ -65,7 +67,7 @@ void Channel::listen(const std::string& shared_secret, int listen_port, OnConnec
     local_destination = i2p::api::CreateLocalDestination(service_keys, true);
   }
   else {
-    local_destination = i2p::api::CreateLocalDestination(true); 
+    local_destination = i2p::api::CreateLocalDestination(true);
   }
     
   i2p_oui_tunnel = std::make_unique<i2p::client::I2PServerTunnel>("i2p_oui_server", localhost, _tunnel_port, local_destination);
@@ -78,6 +80,9 @@ void Channel::listen(const std::string& shared_secret, int listen_port, OnConnec
   cout << "i2p public id:"  << i2p_oui_tunnel->GetLocalDestination()->GetIdentity()->ToBase64() << endl;
   cout << "i2p private keys:"  << i2p_oui_tunnel->GetLocalDestination()->GetPrivateKeys().ToBase64() << endl;
   i2p_oui_tunnel->AddReadyCallback(boost::bind(&Channel::handle_tunnel_ready, this, boost::asio::placeholders::error));
+                                                                                                            //we need to set a timeout in order to trigger the timer for checking the tunnel readyness
+    i2p_oui_tunnel->SetConnectTimeout(connect_timeout);
+
   //_status_timer.async_wait(boost::bind(&Channel::handle_tunnel_ready, this, boost::asio::placeholders::error));
 
 }
