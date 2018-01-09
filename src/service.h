@@ -13,7 +13,7 @@ class Service {
 public:
   using OnConnect = std::function<void(boost::system::error_code, Channel*)>;
 
-  Service(boost::asio::io_service&);
+  Service(const std::string& datadir, boost::asio::io_service&);
 
   Service(const Service&) = delete;
   Service& operator=(const Service&) = delete;

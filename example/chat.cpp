@@ -142,12 +142,16 @@ int main(int argc, char* const* argv)
 
     asio::io_service ios;
 
-    Service service(ios);
+    bool is_client = argc >= 3;
+
+    Service service(is_client ? "chat_client" : "chat_server", ios);
 
     string target_id;
     string port = argv[1];
 
-    if (argc >= 3) {
+    string datadir;
+
+    if (is_client) {
         target_id = argv[2];
     }
 

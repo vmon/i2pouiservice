@@ -8,7 +8,7 @@ using namespace std;
 using namespace ouichannel;
 using namespace i2p_ouichannel;
 
-Service::Service(boost::asio::io_service& ios)
+Service::Service(const string& datadir, boost::asio::io_service& ios)
   : _ios(ios)
 
 {
@@ -22,8 +22,12 @@ Service::Service(boost::asio::io_service& ios)
   i2p::log::Logger().Start();
 
   LogPrint(eLogInfo, "Starting i2p tunnels");
-    
-  i2p::api::InitI2P(0, nullptr, "i2pouiservice");
+
+  string datadir_arg = "--datadir=" + datadir;
+
+  std::vector<const char*> argv({"i2pouiservice", datadir_arg.data()});
+
+  i2p::api::InitI2P(argv.size(), (char**) argv.data(), argv[0]);
   i2p::api::StartI2P();
     
 }
