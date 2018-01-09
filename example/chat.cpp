@@ -118,9 +118,7 @@ static void accept_and_run_chat( unique_ptr<Channel>& channel
 
     cout << "Accepting on port \"" << port << "\"" << endl;
 
-    service.listen(run_chat, PRIVATE_KEY);
-    //cout << "Accepted" << endl;
-    // run_chat(channel, yield);
+    service.listen(PRIVATE_KEY, run_chat);
 }
 
 static void print_usage(const char* app_name)

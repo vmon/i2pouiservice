@@ -50,7 +50,7 @@ void Service::async_setup()
 /**
    chooses a port and listen on it 
 */
-void Service::listen(OnConnect connect_handler, std::string private_key_str) {
+void Service::listen(std::string private_key_str, OnConnect connect_handler) {
   _listen2i2p_port = rand() % 32768 + 32768;
   _connect_handler = connect_handler;
   _private_key_str = private_key_str;

@@ -27,7 +27,7 @@ public:
   /**
      chooses a port and listen on it 
    */
-  void listen(OnConnect connect_handler, std::string private_key_str = "");
+  void listen(std::string private_key_str, OnConnect connect_handler);
 
   ~Service();
 
