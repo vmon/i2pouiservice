@@ -126,7 +126,7 @@ static void accept_and_run_chat( unique_ptr<Channel>& channel
 static void print_usage(const char* app_name)
 {
     cerr << "Usage:\n";
-    cerr << "    " << app_name << " <config-file> <secret-phrase> [peer-id]\n";
+    cerr << "    " << app_name << " <port> [peer-id]\n";
     cerr << "If [peer-id] is used the app acts as a client, "
             "otherwise it acts as a server\n";
 }
@@ -135,20 +135,20 @@ static void print_usage(const char* app_name)
 int main(int argc, char* const* argv)
 {
 
-    if (argc != 3 && argc != 4) {
+    if (argc != 2 && argc != 3) {
         print_usage(argv[0]);
         return 1;
     }
 
     asio::io_service ios;
 
-    Service service(argv[1], ios);
+    Service service(ios);
 
     string target_id;
-    string port = argv[2];
+    string port = argv[1];
 
-    if (argc >= 4) {
-        target_id = argv[3];
+    if (argc >= 3) {
+        target_id = argv[2];
     }
 
     asio::spawn(ios, [&] (auto yield) {

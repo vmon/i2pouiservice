@@ -8,7 +8,7 @@ using namespace std;
 using namespace ouichannel;
 using namespace i2p_ouichannel;
 
-Service::Service(string config_path, boost::asio::io_service& ios)
+Service::Service(boost::asio::io_service& ios)
   : _ios(ios)
 
 {
