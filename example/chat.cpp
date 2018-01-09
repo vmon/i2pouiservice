@@ -20,6 +20,8 @@ using namespace i2p_ouichannel;
 
 unique_ptr<Channel> channel;
 
+static const char* PRIVATE_KEY = "vGSGr4PutpxqnP4QMYpfu1LrD9R0l5GBQS0Y2dErGKoIEtVx25O0gvTlnKfr0DA~Y75rCQe0A2zKELhghsdA6~5aBAiQRJqdOEm-e5tmGIAicjDCzgNRJ-k1aA0d6m7p9zEk7mI5xWZkM1Ipkj-WiPc-QYh1sX6JS6e3~8BtZyMH1GAJMEe3-ZNY2-nE-H62rXlp8gm70fJkXEcfk3l12rLQsJyiTg2chCohuO9pJx8BIzWkFHy2j8icsmAMXDIMXuj6~U28AAWFuXFQs9Go~EVFOtKa7n~WboCc4wmxm7gT-GjTJxTQdY-sDkWJMyrxUMSPhsXwa3gNc0oD-envaUSSHPF4Fl3FO~TPuNbTiqurWk14dZ3-JGTNTHlzBdqfZGjY8VpbsDraaCKSGwVrHUdhtHolMJFdlWeuZyqYH6BSgbQPrI7tMkvr5oG~J6WMk39KvM-Xq6aJiq6fFqr7ls8-B2rf2xFIv8WnF2iBVi~8GNLAlj7t9pkqU1MkwP8EBQAEAAEAALqMSlCLnLUy7q8~e~iCc8fU7XVVIXAh8iD2XEWeqKsLbuchjRb44Kim0ociu6kEixRTgpDtfHvsUzS-nSWhTG00hT1xA8WbMKW-fhks-8X7vOxJO7xKY89KVrJmk6xMjX9cesLkhiJkP4m8KV4LYz036VISmwoivfNzPEB-ObDKMqd01BljEqyS4f82jFf2MqQLtno9JXLD7uKb17Pvd4ys24WmI8nvhtck5JeCx4ew-unvLSUNfgP5UaVB4Jk1NQDc4af9UVLuXfyLaYYgHTamQHn-Ap-VwfwkGr3Vn2YofI6TOEui0hyv0AR1JolMQ5CfklKl5cMDJhorBGizdfS-RjYAWRV9b4bWvSHZWpBxJj70a1En1Wm2zzezBMUbCQ==";
+
 static string remove_new_line(string s)
 {
     while (!s.empty() && *(--s.end()) == '\n') {
@@ -38,11 +40,11 @@ static string consume(asio::streambuf& buf, size_t n)
 
 void handle_read_echo(const boost::system::error_code& ec, asio::streambuf& buffer)
 {
-                if (ec || !channel) return;
+    if (ec || !channel) return;
 
-                cout << "Received: "
-                     << remove_new_line(consume(buffer, buffer.size()))
-                     << endl;
+    cout << "Received: "
+         << remove_new_line(consume(buffer, buffer.size()))
+         << endl;
 }
 
 static void run_chat(const boost::system::error_code& err, Channel* channel) {
@@ -116,7 +118,7 @@ static void accept_and_run_chat( unique_ptr<Channel>& channel
 
     cout << "Accepting on port \"" << port << "\"" << endl;
 
-    service.listen(run_chat, "vGSGr4PutpxqnP4QMYpfu1LrD9R0l5GBQS0Y2dErGKoIEtVx25O0gvTlnKfr0DA~Y75rCQe0A2zKELhghsdA6~5aBAiQRJqdOEm-e5tmGIAicjDCzgNRJ-k1aA0d6m7p9zEk7mI5xWZkM1Ipkj-WiPc-QYh1sX6JS6e3~8BtZyMH1GAJMEe3-ZNY2-nE-H62rXlp8gm70fJkXEcfk3l12rLQsJyiTg2chCohuO9pJx8BIzWkFHy2j8icsmAMXDIMXuj6~U28AAWFuXFQs9Go~EVFOtKa7n~WboCc4wmxm7gT-GjTJxTQdY-sDkWJMyrxUMSPhsXwa3gNc0oD-envaUSSHPF4Fl3FO~TPuNbTiqurWk14dZ3-JGTNTHlzBdqfZGjY8VpbsDraaCKSGwVrHUdhtHolMJFdlWeuZyqYH6BSgbQPrI7tMkvr5oG~J6WMk39KvM-Xq6aJiq6fFqr7ls8-B2rf2xFIv8WnF2iBVi~8GNLAlj7t9pkqU1MkwP8EBQAEAAEAALqMSlCLnLUy7q8~e~iCc8fU7XVVIXAh8iD2XEWeqKsLbuchjRb44Kim0ociu6kEixRTgpDtfHvsUzS-nSWhTG00hT1xA8WbMKW-fhks-8X7vOxJO7xKY89KVrJmk6xMjX9cesLkhiJkP4m8KV4LYz036VISmwoivfNzPEB-ObDKMqd01BljEqyS4f82jFf2MqQLtno9JXLD7uKb17Pvd4ys24WmI8nvhtck5JeCx4ew-unvLSUNfgP5UaVB4Jk1NQDc4af9UVLuXfyLaYYgHTamQHn-Ap-VwfwkGr3Vn2YofI6TOEui0hyv0AR1JolMQ5CfklKl5cMDJhorBGizdfS-RjYAWRV9b4bWvSHZWpBxJj70a1En1Wm2zzezBMUbCQ==");
+    service.listen(run_chat, PRIVATE_KEY);
     //cout << "Accepted" << endl;
     // run_chat(channel, yield);
 }
@@ -133,14 +135,14 @@ static void print_usage(const char* app_name)
 int main(int argc, char* const* argv)
 {
 
-  if (argc != 3 && argc != 4) {
+    if (argc != 3 && argc != 4) {
         print_usage(argv[0]);
         return 1;
     }
 
-  asio::io_service ios;
+    asio::io_service ios;
 
-  Service service(argv[1], ios);
+    Service service(argv[1], ios);
 
     string target_id;
     string port = argv[2];
