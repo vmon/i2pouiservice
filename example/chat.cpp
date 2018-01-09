@@ -96,28 +96,20 @@ static void run_chat(const boost::system::error_code& err, Channel* channel) {
       );
 }
 
-static void connect_and_run_chat( unique_ptr<Channel>& channel
-                                , Service& service
+static void connect_and_run_chat( Service& service
                                 , string target_id
                                 , string port
                                 , asio::yield_context yield)
 {
-    system::error_code ec;
-
     cout << "Connecting to " << target_id << endl;
     channel->connect(target_id, port, service.get_i2p_tunnel_ready_timeout(), run_chat);
-    
 }
 
-static void accept_and_run_chat( unique_ptr<Channel>& channel
-                               , Service& service
+static void accept_and_run_chat( Service& service
                                , string port
                                , asio::yield_context yield)
 {
-    system::error_code ec;
-
     cout << "Accepting on port \"" << port << "\"" << endl;
-
     service.listen(PRIVATE_KEY, run_chat);
 }
 
