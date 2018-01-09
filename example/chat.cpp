@@ -45,23 +45,6 @@ void handle_read_echo(const boost::system::error_code& ec, asio::streambuf& buff
                      << endl;
 }
 
-// static void wait_for_the_echo(const boost::system::error_code& ec, asio::streambuf& buffer)
-// {
-//   if (ec || !channel)
-//     return;
-
-//   asio::async_read(*channel, buffer,
-//                    [&buffer](const system::error_code& ec, std::size_t size) 
-//                    {
-//                       handle_read_echo(ec, buffer);
-//                    }
-//                );
-// }
-
-static void handle_user_input(const boost::system::error_code& ec, asio::streambuf& buffer)
-{
-}
-
 static void run_chat(const boost::system::error_code& err, Channel* channel) {
     auto& ios = channel->get_io_service();
 
