@@ -11,8 +11,7 @@
 
 #include "I2PTunnel.h"
 
-namespace ouichannel {
-namespace i2p_ouichannel {
+namespace i2p_ouiservice {
 
 class Service;
 
@@ -78,12 +77,7 @@ template< class ConstBufferSequence
 void Channel::async_write_some( const ConstBufferSequence& bufs
                               , WriteHandler&& h)
 {
-    using namespace std;
-
     socket_.async_write_some(bufs, h);
-    // get_io_service().post(
-    //                       );
 }
 
-} // i2p_ouichannel
-} // ouichannel
+} // i2p_ouiservice namespace

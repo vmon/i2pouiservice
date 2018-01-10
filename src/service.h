@@ -5,8 +5,7 @@
 
 #include "i2pouichannel.h"
 
-namespace ouichannel {
-namespace i2p_ouichannel {
+namespace i2p_ouiservice {
 
 class Service {
 
@@ -45,5 +44,4 @@ protected:
     
 };
 
-}
-}
+} // i2p_ouiservice namespace

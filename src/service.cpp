@@ -5,8 +5,7 @@
 #include "api.h"
 
 using namespace std;
-using namespace ouichannel;
-using namespace i2p_ouichannel;
+using namespace i2p_ouiservice;
 
 Service::Service(const string& datadir, boost::asio::io_service& ios)
   : _ios(ios)

@@ -17,7 +17,7 @@
 #include "service.h"
 
 using namespace std;
-using namespace ouichannel::i2p_ouichannel;
+using namespace i2p_ouiservice;
 
 Channel::Channel(Service& service)
   : _ios(service.get_io_service()),

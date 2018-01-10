@@ -15,8 +15,7 @@
 using namespace std;
 using namespace boost;
 
-using namespace ouichannel;
-using namespace i2p_ouichannel;
+using namespace i2p_ouiservice;
 
 unique_ptr<Channel> channel;
 
