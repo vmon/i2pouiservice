@@ -47,11 +47,15 @@ void handle_read_echo(const boost::system::error_code& ec, asio::streambuf& buff
          << endl;
 }
 
-static void run_chat(const boost::system::error_code& err, Channel* channel) {
+static void run_chat(const boost::system::error_code& ec, Channel* channel) {
     auto& ios = channel->get_io_service();
 
-    //this co-routine reads always from the socket and write it to std out.
-    //Start printing received messages
+    if (ec) {
+      cerr << "Failed connect/accept: " << ec.message() << endl;
+      return;
+    }
+
+    // This co-routine reads always from the socket and write it to std out.
     asio::spawn(ios, [channel] (asio::yield_context yield) {
             system::error_code ec;
             asio::streambuf buffer(512);
@@ -67,12 +71,7 @@ static void run_chat(const boost::system::error_code& err, Channel* channel) {
             }
         });
 
-    //service.async_setup(yield[ec]);
-    if (err) {
-      cerr << "Failed to set up gnunet service: " << err.message() << endl;
-      return;
-    }
-    // this co-routine reads from std input and send it to peer
+    // This co-routine reads from std input and send it to peer
     asio::spawn(ios, [channel, &ios] (auto yield) {
             system::error_code ec;
             asio::posix::stream_descriptor input(ios, ::dup(STDIN_FILENO)); 
@@ -92,8 +91,7 @@ static void run_chat(const boost::system::error_code& err, Channel* channel) {
               if (size > 0) 
                 asio::async_write(*channel, asio::buffer(consume(buffer, buffer.size())), yield[ec]);
             }
-      }
-      );
+      });
 }
 
 static void connect_and_run_chat( Service& service
