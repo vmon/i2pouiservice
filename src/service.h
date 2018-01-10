@@ -10,7 +10,7 @@ namespace i2p_ouiservice {
 class Service {
 
 public:
-  using OnConnect = std::function<void(boost::system::error_code, Channel*)>;
+  using OnConnect = Channel::OnConnect;
 
   Service(const std::string& datadir, boost::asio::io_service&);
 
@@ -31,9 +31,6 @@ public:
   //access functions
   uint32_t  get_i2p_tunnel_ready_timeout() { return _i2p_tunnel_ready_timeout;};
 protected:
-  void handle_accept(Channel* new_connection,
-                     const boost::system::error_code& error);
-
   uint32_t _i2p_tunnel_ready_timeout;
   boost::asio::io_service& _ios;
   std::unique_ptr<boost::asio::ip::tcp::acceptor> acceptor_;

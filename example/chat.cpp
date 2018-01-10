@@ -46,7 +46,7 @@ void handle_read_echo(const boost::system::error_code& ec, asio::streambuf& buff
          << endl;
 }
 
-static void run_chat(const boost::system::error_code& ec, Channel* channel) {
+static void run_chat(const boost::system::error_code& ec) {
     auto& ios = channel->get_io_service();
 
     if (ec) {
@@ -55,14 +55,14 @@ static void run_chat(const boost::system::error_code& ec, Channel* channel) {
     }
 
     // This co-routine reads always from the socket and write it to std out.
-    asio::spawn(ios, [channel] (asio::yield_context yield) {
+    asio::spawn(ios, [] (asio::yield_context yield) {
             system::error_code ec;
             asio::streambuf buffer(512);
 
             while (true) {
                 size_t n = asio::async_read_until(*channel, buffer, '\n', yield[ec]);
 
-                if (ec || !channel) return;
+                if (ec) return;
 
                 cout << "Received: "
                      << remove_new_line(consume(buffer, n))
@@ -71,7 +71,7 @@ static void run_chat(const boost::system::error_code& ec, Channel* channel) {
         });
 
     // This co-routine reads from std input and send it to peer
-    asio::spawn(ios, [channel, &ios] (auto yield) {
+    asio::spawn(ios, [&ios] (auto yield) {
             system::error_code ec;
             asio::posix::stream_descriptor input(ios, ::dup(STDIN_FILENO)); 
 
@@ -82,8 +82,7 @@ static void run_chat(const boost::system::error_code& ec, Channel* channel) {
               system::error_code ec;
               size_t size = asio::async_read_until(input, buffer, '\n',
                                                    yield[ec]);
-              if (ec || !channel)
-                break;
+              if (ec) break;
 
               cout << "sending your message..." << endl;
               if (size > 0) 

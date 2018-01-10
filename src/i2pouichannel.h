@@ -17,7 +17,7 @@ class Service;
 
 class Channel {
 public:
-  using OnConnect = std::function<void(boost::system::error_code, Channel*)>;
+  using OnConnect = std::function<void(boost::system::error_code)>;
   using OnReceive = std::function<void(boost::system::error_code, size_t)>;
   using OnWrite   = std::function<void(boost::system::error_code, size_t)>;
 

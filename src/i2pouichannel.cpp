@@ -113,7 +113,7 @@ void Channel::handle_connect(const boost::system::error_code& err)
   if (!err)
     {
       // The connection was successful. call the handler
-      (_connect_handler)(err, this);
+      _connect_handler(err);
      
     }
   // else if (endpoint_iterator != boost::asio::ip::tcp::resolver::iterator())
@@ -129,7 +129,7 @@ void Channel::handle_connect(const boost::system::error_code& err)
     {
       //connection failed call the handler with error
       std::cout << "Error: " << err.message() << "\n";
-      (_connect_handler)(err, this);
+      _connect_handler(err);
     }
 }
 
