@@ -56,16 +56,12 @@ protected:
     //boost::asio::steady_timer _status_timer;
     boost::asio::ip::tcp::socket socket_;
     
-    boost::asio::streambuf request_;
-    boost::asio::streambuf response_;
-
     std::unique_ptr<i2p::client::I2PService> i2p_oui_tunnel;
     
     OnConnect _connect_handler;
 
     void handle_tunnel_ready(const boost::system::error_code& err);
     void handle_connect(const boost::system::error_code& err);
-
 };
 
 template< class MutableBufferSequence
