@@ -55,7 +55,6 @@ protected:
     std::string localhost = "127.0.0.1";
     boost::asio::io_service& _ios;
     //boost::asio::steady_timer _status_timer;
-    boost::asio::ip::tcp::resolver resolver_;
     boost::asio::ip::tcp::socket socket_;
     
     boost::asio::streambuf request_;
@@ -66,7 +65,6 @@ protected:
     OnConnect _connect_handler;
 
     void handle_tunnel_ready(const boost::system::error_code& err);
-    void handle_resolve(const boost::system::error_code& err, boost::asio::ip::tcp::resolver::iterator endpoint_iterator);
     void handle_connect(const boost::system::error_code& err);
 
 };

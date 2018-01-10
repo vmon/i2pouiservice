@@ -21,7 +21,6 @@ using namespace ouichannel::i2p_ouichannel;
 
 Channel::Channel(Service& service)
   : _ios(service.get_io_service()),
-    resolver_(_ios),
     socket_(_ios)
 {
 }
@@ -96,15 +95,10 @@ void Channel::handle_tunnel_ready(const boost::system::error_code& err)
       std::cout.flush();
 
       if (i2p_oui_tunnel->GetLocalDestination()->IsReady() && (!_server_mode)) {
-
-        // The tunnel is ready
-        // Start an asynchronous resolve to translate the server and service names
-        // into a list of endpoints.
-        boost::asio::ip::tcp::resolver::query query(localhost, std::to_string(_tunnel_port));
-        resolver_.async_resolve(query,
-                                boost::bind(&Channel::handle_resolve, this,
-                                            boost::asio::placeholders::error,
-                                            boost::asio::placeholders::iterator));
+        namespace ip = boost::asio::ip;
+        socket_.async_connect(ip::tcp::endpoint(ip::address_v4::loopback(), _tunnel_port),
+                              boost::bind(&Channel::handle_connect, this,
+                                          boost::asio::placeholders::error));
       } /*else {
         _status_timer.expires_at(_status_timer.expires_at() + std::chrono::seconds{3});
         _status_timer.async_wait(boost::bind(&Channel::handle_tunnel_ready, this, boost::asio::placeholders::error));
@@ -115,24 +109,6 @@ void Channel::handle_tunnel_ready(const boost::system::error_code& err)
       std::cout << "Error: " << err.message() << "\n";
     }
 
-}
-
-void Channel::handle_resolve(const boost::system::error_code& err,
-                             boost::asio::ip::tcp::resolver::iterator endpoint_iterator)
-{
-  if (!err)
-    {
-      // Attempt a connection to the first endpoint in the list. Each endpoint
-      // will be tried until we successfully establish a connection.
-      boost::asio::ip::tcp::endpoint endpoint = *endpoint_iterator;
-      socket_.async_connect(endpoint,
-                            boost::bind(&Channel::handle_connect, this,
-                                        boost::asio::placeholders::error));
-    }
-  else
-    {
-      std::cout << "Error: " << err.message() << "\n";
-    }
 }
 
 void Channel::handle_connect(const boost::system::error_code& err)
