@@ -18,8 +18,6 @@ public:
   Service(const Service&) = delete;
   Service& operator=(const Service&) = delete;
 
-  void async_setup();
-
   boost::asio::io_service& get_io_service();
 
   std::string identity() const;
@@ -27,7 +25,7 @@ public:
   /**
      chooses a port and listen on it 
    */
-  void listen(std::string private_key_str, OnConnect connect_handler);
+  void listen(std::string private_key_str, Channel&, OnConnect connect_handler);
 
   ~Service();
 

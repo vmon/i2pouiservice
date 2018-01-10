@@ -42,50 +42,28 @@ Service::~Service()
   //TODO?
 }
 
-void Service::async_setup()
-{
-  return;
-}
-
 /**
    chooses a port and listen on it 
 */
-void Service::listen(std::string private_key_str, OnConnect connect_handler) {
+void Service::listen(std::string private_key_str, Channel& channel, OnConnect connect_handler) {
   _listen2i2p_port = rand() % 32768 + 32768;
   _connect_handler = connect_handler;
   _private_key_str = private_key_str;
 
+  using tcp = boost::asio::ip::tcp;
+
   //we have to listen to this prot so the i2pservertunnel can forward us the connection
-  acceptor_ = std::make_unique<boost::asio::ip::tcp::acceptor>(_ios, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), _listen2i2p_port));
-  Channel* new_connection = new Channel(*this);
+  acceptor_ = std::make_unique<tcp::acceptor>(_ios, tcp::endpoint(tcp::v4(), _listen2i2p_port));
+
   acceptor_->listen();
-  acceptor_->async_accept(new_connection->socket_,
-                          boost::bind(&Service::handle_accept, this, new_connection,
-                                      boost::asio::placeholders::error));
-  new_connection->listen(_listen2i2p_port, _connect_handler, _i2p_tunnel_ready_timeout,  _private_key_str);
-  
+
+  acceptor_->async_accept(channel.socket_,
+                          [this, ch = &channel](boost::system::error_code ec) {
+                              if (ec) {
+                                  std::cout << "Error: " << ec.message() << "\n";
+                              }
+                              ch->handle_connect(ec);
+                          });
+
+  channel.listen(_listen2i2p_port, _connect_handler, _i2p_tunnel_ready_timeout,  _private_key_str);
 }
-
-void Service::handle_accept(Channel* new_connection,
-         const boost::system::error_code& error)
-{
-    if (!error)
-    {
-      new_connection->handle_connect(error);
-    }
-    else
-    {
-      std::cout << "Error: " << error.message() << "\n";
-      delete new_connection;
-    }
-
-    Channel* re_connect = new Channel(*this);
-    acceptor_->async_accept(re_connect->socket_,
-          boost::bind(&Service::handle_accept, this, re_connect,
-          boost::asio::placeholders::error));
-
-    re_connect->listen(_listen2i2p_port, _connect_handler, _i2p_tunnel_ready_timeout, _private_key_str);
-
-}
-
-
