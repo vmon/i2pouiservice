@@ -78,7 +78,6 @@ static void run_chat(const boost::system::error_code& ec, Channel* channel) {
 
             asio::streambuf buffer(512);
 
-
             cout << "Enter a message to the peer" << endl;
             while (true) {
               system::error_code ec;
@@ -117,10 +116,8 @@ static void print_usage(const char* app_name)
             "otherwise it acts as a server\n";
 }
 
-
 int main(int argc, char* const* argv)
 {
-
     if (argc != 1 && argc != 2) {
         print_usage(argv[0]);
         return 1;
@@ -132,28 +129,11 @@ int main(int argc, char* const* argv)
 
     Service service(is_client ? "chat_client" : "chat_server", ios);
 
-    string target_id;
-
-    string datadir;
-
-    if (is_client) {
-        target_id = argv[1];
-    }
-
     asio::spawn(ios, [&] (auto yield) {
-            system::error_code ec;
-
-            //service.async_setup(yield[ec]);
-
-            if (ec) {
-                cerr << "Failed to set up gnunet service: " << ec.message() << endl;
-                return;
-            }
-
             channel = make_unique<Channel>(service);
 
-            if (!target_id.empty()) {
-              connect_and_run_chat(service, target_id, yield);
+            if (is_client) {
+              connect_and_run_chat(service, argv[1], yield);
             }
             else {
               accept_and_run_chat(service, yield);
