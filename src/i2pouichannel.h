@@ -33,10 +33,9 @@ public:
 
     boost::asio::io_service& get_io_service();
 
-    void
-      connect( std::string target_id, const std::string& shared_secret, uint32_t connect_timeout,           OnConnect connect_handler);
+    void connect(std::string target_id, uint32_t connect_timeout, OnConnect connect_handler);
 
-    void listen(const std::string& shared_secret, int listen_port, OnConnect connect_handler, uint32_t connect_timeout = 0, std::string private_key_str = "");
+    void listen(int listen_port, OnConnect connect_handler, uint32_t connect_timeout = 0, std::string private_key_str = "");
     
     template< class MutableBufferSequence
             , class ReadHandler>

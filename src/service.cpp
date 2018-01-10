@@ -62,7 +62,7 @@ void Service::listen(std::string private_key_str, OnConnect connect_handler) {
   acceptor_->async_accept(new_connection->socket_,
                           boost::bind(&Service::handle_accept, this, new_connection,
                                       boost::asio::placeholders::error));
-  new_connection->listen("", _listen2i2p_port, _connect_handler, _i2p_tunnel_ready_timeout,  _private_key_str);
+  new_connection->listen(_listen2i2p_port, _connect_handler, _i2p_tunnel_ready_timeout,  _private_key_str);
   
 }
 
@@ -84,7 +84,7 @@ void Service::handle_accept(Channel* new_connection,
           boost::bind(&Service::handle_accept, this, re_connect,
           boost::asio::placeholders::error));
 
-    re_connect->listen("", _listen2i2p_port, _connect_handler, _i2p_tunnel_ready_timeout, _private_key_str);
+    re_connect->listen(_listen2i2p_port, _connect_handler, _i2p_tunnel_ready_timeout, _private_key_str);
 
 }
 

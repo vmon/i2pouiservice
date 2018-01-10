@@ -31,7 +31,6 @@ boost::asio::io_service& Channel::get_io_service()
 }
 
 void Channel::connect( std::string target_id
-                          , const std::string& shared_secret
                           , uint32_t connect_timeout
                           , OnConnect connect_handler)
 {
@@ -52,7 +51,7 @@ void Channel::connect( std::string target_id
 
 }
 
-void Channel::listen(const std::string& shared_secret, int listen_port, OnConnect connect_handler, uint32_t connect_timeout, std::string private_key_str)
+void Channel::listen(int listen_port, OnConnect connect_handler, uint32_t connect_timeout, std::string private_key_str)
 {
   _server_mode = true;
   _tunnel_port = listen_port;

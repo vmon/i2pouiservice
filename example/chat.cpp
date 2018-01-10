@@ -98,25 +98,23 @@ static void run_chat(const boost::system::error_code& err, Channel* channel) {
 
 static void connect_and_run_chat( Service& service
                                 , string target_id
-                                , string port
                                 , asio::yield_context yield)
 {
     cout << "Connecting to " << target_id << endl;
-    channel->connect(target_id, port, service.get_i2p_tunnel_ready_timeout(), run_chat);
+    channel->connect(target_id, service.get_i2p_tunnel_ready_timeout(), run_chat);
 }
 
 static void accept_and_run_chat( Service& service
-                               , string port
                                , asio::yield_context yield)
 {
-    cout << "Accepting on port \"" << port << "\"" << endl;
+    cout << "Accepting" << endl;
     service.listen(PRIVATE_KEY, run_chat);
 }
 
 static void print_usage(const char* app_name)
 {
     cerr << "Usage:\n";
-    cerr << "    " << app_name << " <port> [peer-id]\n";
+    cerr << "    " << app_name << " [peer-id]\n";
     cerr << "If [peer-id] is used the app acts as a client, "
             "otherwise it acts as a server\n";
 }
@@ -125,24 +123,23 @@ static void print_usage(const char* app_name)
 int main(int argc, char* const* argv)
 {
 
-    if (argc != 2 && argc != 3) {
+    if (argc != 1 && argc != 2) {
         print_usage(argv[0]);
         return 1;
     }
 
     asio::io_service ios;
 
-    bool is_client = argc >= 3;
+    bool is_client = argc >= 2;
 
     Service service(is_client ? "chat_client" : "chat_server", ios);
 
     string target_id;
-    string port = argv[1];
 
     string datadir;
 
     if (is_client) {
-        target_id = argv[2];
+        target_id = argv[1];
     }
 
     asio::spawn(ios, [&] (auto yield) {
@@ -158,10 +155,10 @@ int main(int argc, char* const* argv)
             channel = make_unique<Channel>(service);
 
             if (!target_id.empty()) {
-              connect_and_run_chat(service, target_id, port, yield);
+              connect_and_run_chat(service, target_id, yield);
             }
             else {
-              accept_and_run_chat(service, port, yield);
+              accept_and_run_chat(service, yield);
             }
         });
 
