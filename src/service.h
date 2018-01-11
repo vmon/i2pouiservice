@@ -24,18 +24,12 @@ public:
    */
   void accept(std::string private_key_str, Channel&, OnConnect connect_handler);
 
-  ~Service();
-
   //access functions
-  uint32_t  get_i2p_tunnel_ready_timeout() { return _i2p_tunnel_ready_timeout;};
+  uint32_t  get_i2p_tunnel_ready_timeout() { return 5*60; /* 5 minutes */ };
 
 protected:
-  uint32_t _i2p_tunnel_ready_timeout;
   boost::asio::io_service& _ios;
   std::unique_ptr<boost::asio::ip::tcp::acceptor> acceptor_;
-
-  OnConnect _connect_handler;
-  std::string _private_key_str;
 };
 
 } // i2p_ouiservice namespace

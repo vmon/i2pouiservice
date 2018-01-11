@@ -44,8 +44,6 @@ public:
             , class WriteHandler>
     void async_write_some(const ConstBufferSequence&, WriteHandler&&);
 
-    ~Channel();
-
 protected:
     friend class Service;
     int _tunnel_port;

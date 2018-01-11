@@ -31,8 +31,8 @@ boost::asio::io_service& Channel::get_io_service()
 }
 
 void Channel::connect( std::string target_id
-                          , uint32_t connect_timeout
-                          , OnConnect connect_handler)
+                     , uint32_t connect_timeout
+                     , OnConnect connect_handler)
 {
     _tunnel_port = rand() % 32768 + 32768;
 
@@ -113,9 +113,4 @@ void Channel::handle_connect(const boost::system::error_code& ec)
     }
 
     _connect_handler(ec);
-}
-
-Channel::~Channel()
-{
-  //TODO
 }
