@@ -76,12 +76,13 @@ void Service::accept(Channel& channel, OnConnect connect_handler) {
   uint16_t port = acceptor_->local_endpoint().port();
 
   acceptor_->async_accept(channel.socket_,
-                          [this, ch = &channel](boost::system::error_code ec) {
+                          [ch = &channel, h = std::move(connect_handler)]
+                          (boost::system::error_code ec) {
                               if (ec) {
                                   std::cout << "Error: " << ec.message() << "\n";
                               }
-                              ch->handle_connect(ec);
+                              h(ec);
                           });
 
-  channel.accept(port, get_i2p_tunnel_ready_timeout(), _private_keys, connect_handler);
+  channel.accept(port, get_i2p_tunnel_ready_timeout(), _private_keys);
 }

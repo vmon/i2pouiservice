@@ -28,7 +28,7 @@ public:
 
     void connect(std::string target_id, uint32_t connect_timeout, OnConnect connect_handler);
 
-    void accept(int listen_port, uint32_t connect_timeout, i2p::data::PrivateKeys, OnConnect connect_handler);
+    void accept(int listen_port, uint32_t connect_timeout, i2p::data::PrivateKeys);
     
     template< class MutableBufferSequence
             , class ReadHandler>
@@ -41,7 +41,6 @@ public:
 protected:
     friend class Service;
     int _tunnel_port;
-    bool _server_mode = false;
     std::string localhost = "127.0.0.1";
     boost::asio::io_service& _ios;
     boost::asio::ip::tcp::socket socket_;
@@ -51,7 +50,6 @@ protected:
     OnConnect _connect_handler;
 
     void handle_tunnel_ready(const boost::system::error_code& err);
-    void handle_connect(const boost::system::error_code& err);
 };
 
 template< class MutableBufferSequence
