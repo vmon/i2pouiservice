@@ -39,7 +39,7 @@ void Channel::connect( std::string target_id
     i2p_oui_tunnel->SetConnectTimeout(connect_timeout);
 }
 
-void Channel::accept(int listen_port, OnConnect connect_handler, uint32_t connect_timeout, std::string private_key_str)
+void Channel::accept(int listen_port, OnConnect connect_handler, uint32_t connect_timeout, i2p::data::PrivateKeys private_keys)
 {
   _server_mode = true;
   _tunnel_port = listen_port;
@@ -47,23 +47,12 @@ void Channel::accept(int listen_port, OnConnect connect_handler, uint32_t connec
   //we need to make a local destination first.
   std::shared_ptr<i2p::client::ClientDestination> local_destination;
 
-  if (private_key_str.length() > 0) {
-    i2p::data::PrivateKeys service_keys;
-    service_keys.FromBase64(private_key_str);
-    local_destination = i2p::api::CreateLocalDestination(service_keys, true);
-  }
-  else {
-    local_destination = i2p::api::CreateLocalDestination(true);
-  }
+  local_destination = i2p::api::CreateLocalDestination(private_keys, true);
     
   i2p_oui_tunnel = std::make_unique<i2p::client::I2PServerTunnel>("i2p_oui_server", localhost, _tunnel_port, local_destination);
   _connect_handler = connect_handler;
 
   i2p_oui_tunnel->Start();
-
-  cout << "port: " << _tunnel_port << endl;
-  cout << "i2p public id:"     << local_destination->GetIdentity()->ToBase64() << endl;
-  cout << "i2p private keys:"  << local_destination->GetPrivateKeys().ToBase64() << endl;
 
   //Wait till we find a route to the service and tunnel is ready then try to acutally connect and then call the handl
   i2p_oui_tunnel->AddReadyCallback(boost::bind(&Channel::handle_tunnel_ready, this, boost::asio::placeholders::error));

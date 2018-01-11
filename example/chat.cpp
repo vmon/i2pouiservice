@@ -16,8 +16,6 @@ using namespace i2p_ouiservice;
 
 unique_ptr<Channel> channel;
 
-static const char* PRIVATE_KEY = "vGSGr4PutpxqnP4QMYpfu1LrD9R0l5GBQS0Y2dErGKoIEtVx25O0gvTlnKfr0DA~Y75rCQe0A2zKELhghsdA6~5aBAiQRJqdOEm-e5tmGIAicjDCzgNRJ-k1aA0d6m7p9zEk7mI5xWZkM1Ipkj-WiPc-QYh1sX6JS6e3~8BtZyMH1GAJMEe3-ZNY2-nE-H62rXlp8gm70fJkXEcfk3l12rLQsJyiTg2chCohuO9pJx8BIzWkFHy2j8icsmAMXDIMXuj6~U28AAWFuXFQs9Go~EVFOtKa7n~WboCc4wmxm7gT-GjTJxTQdY-sDkWJMyrxUMSPhsXwa3gNc0oD-envaUSSHPF4Fl3FO~TPuNbTiqurWk14dZ3-JGTNTHlzBdqfZGjY8VpbsDraaCKSGwVrHUdhtHolMJFdlWeuZyqYH6BSgbQPrI7tMkvr5oG~J6WMk39KvM-Xq6aJiq6fFqr7ls8-B2rf2xFIv8WnF2iBVi~8GNLAlj7t9pkqU1MkwP8EBQAEAAEAALqMSlCLnLUy7q8~e~iCc8fU7XVVIXAh8iD2XEWeqKsLbuchjRb44Kim0ociu6kEixRTgpDtfHvsUzS-nSWhTG00hT1xA8WbMKW-fhks-8X7vOxJO7xKY89KVrJmk6xMjX9cesLkhiJkP4m8KV4LYz036VISmwoivfNzPEB-ObDKMqd01BljEqyS4f82jFf2MqQLtno9JXLD7uKb17Pvd4ys24WmI8nvhtck5JeCx4ew-unvLSUNfgP5UaVB4Jk1NQDc4af9UVLuXfyLaYYgHTamQHn-Ap-VwfwkGr3Vn2YofI6TOEui0hyv0AR1JolMQ5CfklKl5cMDJhorBGizdfS-RjYAWRV9b4bWvSHZWpBxJj70a1En1Wm2zzezBMUbCQ==";
-
 static string remove_new_line(string s)
 {
     while (!s.empty() && *(--s.end()) == '\n') {
@@ -99,8 +97,9 @@ static void connect_and_run_chat( Service& service
 static void accept_and_run_chat( Service& service
                                , asio::yield_context yield)
 {
-    cout << "Accepting" << endl;
-    service.accept(PRIVATE_KEY, *channel, run_chat);
+    cout << "Accepting on" << endl;
+    cout << service.public_identity() << endl;
+    service.accept(*channel, run_chat);
 }
 
 static void print_usage(const char* app_name)
