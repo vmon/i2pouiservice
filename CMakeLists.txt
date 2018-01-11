@@ -20,12 +20,12 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall -ggdb ${SANITIZE}")
 
 include_directories(
     "${Boost_INCLUDE_DIR}"
-    "${CMAKE_SOURCE_DIR}/src"
+    "${CMAKE_SOURCE_DIR}/include/"
     "${CMAKE_SOURCE_DIR}/i2pd/libi2pd"
     "${CMAKE_SOURCE_DIR}/i2pd/libi2pd_client")
 
 file(GLOB sources
-    "${CMAKE_SOURCE_DIR}/src/i2pouichannel.cpp"
+    "${CMAKE_SOURCE_DIR}/src/channel.cpp"
     "${CMAKE_SOURCE_DIR}/src/service.cpp"
     "${CMAKE_SOURCE_DIR}/example/chat.cpp")
 

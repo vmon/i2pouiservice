@@ -6,8 +6,7 @@
 #include <boost/asio/read_until.hpp>
 #include <boost/asio/write.hpp>
 
-#include "i2pouichannel.h"
-#include "service.h"
+#include "i2poui.h"
 
 using namespace std;
 using namespace boost;

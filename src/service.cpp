@@ -1,6 +1,6 @@
 #include <fstream>
 #include <streambuf>
-#include "service.h"
+#include <i2poui/service.h>
 
 //i2p stuff
 #include "Log.h"

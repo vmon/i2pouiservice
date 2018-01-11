@@ -2,7 +2,7 @@
 
 #include <boost/asio.hpp>
 
-#include "i2pouichannel.h"
+#include <i2poui/channel.h>
 
 namespace i2p_ouiservice {
 

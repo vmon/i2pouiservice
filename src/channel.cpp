@@ -3,8 +3,8 @@
 #include "I2PService.h"
 #include "api.h"
 
-#include "i2pouichannel.h"
-#include "service.h"
+#include <i2poui/channel.h>
+#include <i2poui/service.h>
 
 using namespace std;
 using namespace i2p_ouiservice;
