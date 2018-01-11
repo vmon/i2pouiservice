@@ -103,7 +103,7 @@ static void accept_and_run_chat( Service& service
                                , asio::yield_context yield)
 {
     cout << "Accepting" << endl;
-    service.listen(PRIVATE_KEY, *channel, run_chat);
+    service.accept(PRIVATE_KEY, *channel, run_chat);
 }
 
 static void print_usage(const char* app_name)

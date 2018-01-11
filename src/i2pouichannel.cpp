@@ -48,10 +48,9 @@ void Channel::connect( std::string target_id
     //we need to set a timeout in order to trigger the timer for checking the tunnel readyness
     i2p_oui_tunnel->SetConnectTimeout(connect_timeout);
     //_status_timer.async_wait(boost::bind(&Channel::handle_tunnel_ready, this, boost::asio::placeholders::error));
-
 }
 
-void Channel::listen(int listen_port, OnConnect connect_handler, uint32_t connect_timeout, std::string private_key_str)
+void Channel::accept(int listen_port, OnConnect connect_handler, uint32_t connect_timeout, std::string private_key_str)
 {
   _server_mode = true;
   _tunnel_port = listen_port;

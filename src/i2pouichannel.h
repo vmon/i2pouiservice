@@ -34,7 +34,7 @@ public:
 
     void connect(std::string target_id, uint32_t connect_timeout, OnConnect connect_handler);
 
-    void listen(int listen_port, OnConnect connect_handler, uint32_t connect_timeout = 0, std::string private_key_str = "");
+    void accept(int listen_port, OnConnect connect_handler, uint32_t connect_timeout = 0, std::string private_key_str = "");
     
     template< class MutableBufferSequence
             , class ReadHandler>

@@ -22,14 +22,15 @@ public:
   std::string identity() const;
 
   /**
-     chooses a port and listen on it 
+     chooses a port and accept on it
    */
-  void listen(std::string private_key_str, Channel&, OnConnect connect_handler);
+  void accept(std::string private_key_str, Channel&, OnConnect connect_handler);
 
   ~Service();
 
   //access functions
   uint32_t  get_i2p_tunnel_ready_timeout() { return _i2p_tunnel_ready_timeout;};
+
 protected:
   uint32_t _i2p_tunnel_ready_timeout;
   boost::asio::io_service& _ios;
@@ -38,7 +39,6 @@ protected:
 
   OnConnect _connect_handler;
   std::string _private_key_str;
-    
 };
 
 } // i2p_ouiservice namespace
