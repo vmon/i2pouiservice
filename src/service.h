@@ -33,7 +33,6 @@ protected:
   uint32_t _i2p_tunnel_ready_timeout;
   boost::asio::io_service& _ios;
   std::unique_ptr<boost::asio::ip::tcp::acceptor> acceptor_;
-  int _listen2i2p_port;
 
   OnConnect _connect_handler;
   std::string _private_key_str;

@@ -44,16 +44,15 @@ Service::~Service()
    chooses a port and accept on it
 */
 void Service::accept(std::string private_key_str, Channel& channel, OnConnect connect_handler) {
-  _listen2i2p_port = rand() % 32768 + 32768;
   _connect_handler = connect_handler;
   _private_key_str = private_key_str;
 
   using tcp = boost::asio::ip::tcp;
 
   //we have to accept to this prot so the i2pservertunnel can forward us the connection
-  acceptor_ = std::make_unique<tcp::acceptor>(_ios, tcp::endpoint(tcp::v4(), _listen2i2p_port));
+  acceptor_ = std::make_unique<tcp::acceptor>(_ios, tcp::endpoint(tcp::v4(), 0));
 
-  acceptor_->listen();
+  uint16_t port = acceptor_->local_endpoint().port();
 
   acceptor_->async_accept(channel.socket_,
                           [this, ch = &channel](boost::system::error_code ec) {
@@ -63,5 +62,5 @@ void Service::accept(std::string private_key_str, Channel& channel, OnConnect co
                               ch->handle_connect(ec);
                           });
 
-  channel.accept(_listen2i2p_port, _connect_handler, _i2p_tunnel_ready_timeout,  _private_key_str);
+  channel.accept(port, _connect_handler, _i2p_tunnel_ready_timeout,  _private_key_str);
 }
