@@ -57,7 +57,7 @@ template< class MutableBufferSequence
 void Channel::async_read_some( const MutableBufferSequence& bufs
                              , ReadHandler&& h)
 {
-    socket_.async_read_some(bufs, h);
+    socket_.async_read_some(bufs, std::forward<ReadHandler>(h));
 }
 
 
@@ -66,7 +66,7 @@ template< class ConstBufferSequence
 void Channel::async_write_some( const ConstBufferSequence& bufs
                               , WriteHandler&& h)
 {
-    socket_.async_write_some(bufs, h);
+    socket_.async_write_some(bufs, std::forward<WriteHandler>(h));
 }
 
 } // i2poui namespace
