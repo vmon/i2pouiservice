@@ -28,7 +28,7 @@ public:
 
     void connect(std::string target_id, uint32_t connect_timeout, OnConnect connect_handler);
 
-    void accept(int listen_port, OnConnect connect_handler, uint32_t connect_timeout, i2p::data::PrivateKeys);
+    void accept(int listen_port, uint32_t connect_timeout, i2p::data::PrivateKeys, OnConnect connect_handler);
     
     template< class MutableBufferSequence
             , class ReadHandler>

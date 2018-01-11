@@ -83,5 +83,5 @@ void Service::accept(Channel& channel, OnConnect connect_handler) {
                               ch->handle_connect(ec);
                           });
 
-  channel.accept(port, connect_handler, get_i2p_tunnel_ready_timeout(), _private_keys);
+  channel.accept(port, get_i2p_tunnel_ready_timeout(), _private_keys, connect_handler);
 }

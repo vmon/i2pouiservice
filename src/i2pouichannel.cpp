@@ -39,7 +39,7 @@ void Channel::connect( std::string target_id
     i2p_oui_tunnel->SetConnectTimeout(connect_timeout);
 }
 
-void Channel::accept(int listen_port, OnConnect connect_handler, uint32_t connect_timeout, i2p::data::PrivateKeys private_keys)
+void Channel::accept(int listen_port, uint32_t connect_timeout, i2p::data::PrivateKeys private_keys, OnConnect connect_handler)
 {
   _server_mode = true;
   _tunnel_port = listen_port;
