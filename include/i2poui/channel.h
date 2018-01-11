@@ -3,22 +3,15 @@
 #include <memory>
 #include <boost/system/error_code.hpp>
 #include <boost/asio.hpp>
-#include <boost/asio/io_service.hpp>
-#include <boost/asio/buffer.hpp>
-#include <boost/asio/buffers_iterator.hpp>
-#include <boost/bind.hpp>
-#include <boost/asio/steady_timer.hpp>
-
 #include "I2PTunnel.h"
 
-namespace ouichannel {
-namespace i2p_ouichannel {
+namespace i2poui {
 
 class Service;
 
 class Channel {
 public:
-  using OnConnect = std::function<void(boost::system::error_code, Channel*)>;
+  using OnConnect = std::function<void(boost::system::error_code)>;
   using OnReceive = std::function<void(boost::system::error_code, size_t)>;
   using OnWrite   = std::function<void(boost::system::error_code, size_t)>;
 
@@ -33,10 +26,9 @@ public:
 
     boost::asio::io_service& get_io_service();
 
-    void
-      connect( std::string target_id, const std::string& shared_secret, uint32_t connect_timeout,           OnConnect connect_handler);
+    void connect(std::string target_id, uint32_t connect_timeout, OnConnect connect_handler);
 
-    void listen(const std::string& shared_secret, int listen_port, OnConnect connect_handler, uint32_t connect_timeout = 0, std::string private_key_str = "");
+    void accept(int listen_port, uint32_t connect_timeout, i2p::data::PrivateKeys);
     
     template< class MutableBufferSequence
             , class ReadHandler>
@@ -46,29 +38,18 @@ public:
             , class WriteHandler>
     void async_write_some(const ConstBufferSequence&, WriteHandler&&);
 
-    ~Channel();
-
 protected:
     friend class Service;
     int _tunnel_port;
-    bool _server_mode = false;
     std::string localhost = "127.0.0.1";
     boost::asio::io_service& _ios;
-    //boost::asio::steady_timer _status_timer;
-    boost::asio::ip::tcp::resolver resolver_;
     boost::asio::ip::tcp::socket socket_;
     
-    boost::asio::streambuf request_;
-    boost::asio::streambuf response_;
-
     std::unique_ptr<i2p::client::I2PService> i2p_oui_tunnel;
     
     OnConnect _connect_handler;
 
     void handle_tunnel_ready(const boost::system::error_code& err);
-    void handle_resolve(const boost::system::error_code& err, boost::asio::ip::tcp::resolver::iterator endpoint_iterator);
-    void handle_connect(const boost::system::error_code& err);
-
 };
 
 template< class MutableBufferSequence
@@ -76,7 +57,7 @@ template< class MutableBufferSequence
 void Channel::async_read_some( const MutableBufferSequence& bufs
                              , ReadHandler&& h)
 {
-    socket_.async_read_some(bufs, h);
+    socket_.async_read_some(bufs, std::forward<ReadHandler>(h));
 }
 
 
@@ -85,12 +66,7 @@ template< class ConstBufferSequence
 void Channel::async_write_some( const ConstBufferSequence& bufs
                               , WriteHandler&& h)
 {
-    using namespace std;
-
-    socket_.async_write_some(bufs, h);
-    // get_io_service().post(
-    //                       );
+    socket_.async_write_some(bufs, std::forward<WriteHandler>(h));
 }
 
-} // i2p_ouichannel
-} // ouichannel
+} // i2poui namespace
