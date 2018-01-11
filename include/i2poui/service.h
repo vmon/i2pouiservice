@@ -4,7 +4,7 @@
 
 #include <i2poui/channel.h>
 
-namespace i2p_ouiservice {
+namespace i2poui {
 
 class Service {
 
@@ -34,4 +34,4 @@ protected:
   i2p::data::PrivateKeys _private_keys;
 };
 
-} // i2p_ouiservice namespace
+} // i2poui namespace

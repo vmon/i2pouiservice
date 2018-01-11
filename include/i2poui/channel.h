@@ -5,7 +5,7 @@
 #include <boost/asio.hpp>
 #include "I2PTunnel.h"
 
-namespace i2p_ouiservice {
+namespace i2poui {
 
 class Service;
 
@@ -69,4 +69,4 @@ void Channel::async_write_some( const ConstBufferSequence& bufs
     socket_.async_write_some(bufs, h);
 }
 
-} // i2p_ouiservice namespace
+} // i2poui namespace

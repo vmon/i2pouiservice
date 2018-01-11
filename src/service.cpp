@@ -7,7 +7,7 @@
 #include "api.h"
 
 using namespace std;
-using namespace i2p_ouiservice;
+using namespace i2poui;
 
 static string load_private_key()
 {
