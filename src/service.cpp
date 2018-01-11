@@ -22,14 +22,14 @@ static string load_private_key()
     }
 
     // File doesn't exist
-    std::shared_ptr<i2p::client::ClientDestination> local_dst;
-    local_dst = i2p::api::CreateLocalDestination(true);
-    string priv_key = local_dst->GetPrivateKeys().ToBase64();
+    i2p::data::SigningKeyType sig_type = i2p::data::SIGNING_KEY_TYPE_ECDSA_SHA256_P256;
+	i2p::data::PrivateKeys keys = i2p::data::PrivateKeys::CreateRandomKeys(sig_type);
+    string keys_str = keys.ToBase64();
 
     ofstream out_file(key_file_name);
-    out_file << priv_key;
+    out_file << keys_str;
 
-    return priv_key;
+    return keys_str;
 }
 
 Service::Service(const string& datadir, boost::asio::io_service& ios)

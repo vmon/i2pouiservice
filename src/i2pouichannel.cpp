@@ -67,7 +67,7 @@ void Channel::handle_tunnel_ready(const boost::system::error_code& err)
     {
       bool is_ready = i2p_oui_tunnel->GetLocalDestination()->IsReady();
 
-      std::cout << "Tunnel is " << (is_ready ? "" : "NOT") << " ready" << std::endl;
+      std::cout << "Tunnel is " << (is_ready ? "" : "NOT ") << "ready" << std::endl;
       std::cout.flush();
 
       if (is_ready && !_server_mode) {
