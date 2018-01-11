@@ -5,9 +5,6 @@
 #include <boost/asio/posix/stream_descriptor.hpp>
 #include <boost/asio/read_until.hpp>
 #include <boost/asio/write.hpp>
-#include <boost/bind.hpp>
-#include <boost/make_shared.hpp>
-#include <unistd.h>
 
 #include "i2pouichannel.h"
 #include "service.h"

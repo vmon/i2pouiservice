@@ -3,12 +3,6 @@
 #include <memory>
 #include <boost/system/error_code.hpp>
 #include <boost/asio.hpp>
-#include <boost/asio/io_service.hpp>
-#include <boost/asio/buffer.hpp>
-#include <boost/asio/buffers_iterator.hpp>
-#include <boost/bind.hpp>
-#include <boost/asio/steady_timer.hpp>
-
 #include "I2PTunnel.h"
 
 namespace i2p_ouiservice {
@@ -50,7 +44,6 @@ protected:
     bool _server_mode = false;
     std::string localhost = "127.0.0.1";
     boost::asio::io_service& _ios;
-    //boost::asio::steady_timer _status_timer;
     boost::asio::ip::tcp::socket socket_;
     
     std::unique_ptr<i2p::client::I2PService> i2p_oui_tunnel;

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <boost/asio/io_service.hpp>
 #include <boost/asio.hpp>
 
 #include "i2pouichannel.h"
