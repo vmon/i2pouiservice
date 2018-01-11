@@ -19,8 +19,6 @@ public:
 
   boost::asio::io_service& get_io_service();
 
-  std::string identity() const;
-
   /**
      chooses a port and accept on it
    */
