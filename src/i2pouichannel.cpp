@@ -104,32 +104,15 @@ void Channel::handle_tunnel_ready(const boost::system::error_code& err)
     {
       std::cout << "Error: " << err.message() << "\n";
     }
-
 }
 
-void Channel::handle_connect(const boost::system::error_code& err)
+void Channel::handle_connect(const boost::system::error_code& ec)
 {
-  if (!err)
-    {
-      // The connection was successful. call the handler
-      _connect_handler(err);
-     
+    if (ec) {
+        std::cout << "Error: " << ec.message() << "\n";
     }
-  // else if (endpoint_iterator != boost::asio::ip::tcp::resolver::iterator())
-  //   {
-  //     // The connection failed. Try the next endpoint in the list.
-  //     socket_.close();
-  //     boost::asio::ip::tcp::endpoint endpoint = *endpoint_iterator;
-  //     socket_.async_connect(endpoint,
-  //                           boost::bind(&Channel::handle_connect, this,
-  //                                       boost::asio::placeholders::error, ++endpoint_iterator));
-  //   }
-    else
-    {
-      //connection failed call the handler with error
-      std::cout << "Error: " << err.message() << "\n";
-      _connect_handler(err);
-    }
+
+    _connect_handler(ec);
 }
 
 Channel::~Channel()
